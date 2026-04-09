@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>삼호 Yard 한국어</title>
+  
+  <!-- 1. Tailwind CSS (디자인을 위한 도구) 불러오기 -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- 2. React (앱 구동을 위한 도구) 불러오기 -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- 3. Babel (리액트 코드를 브라우저가 읽을 수 있게 변환해주는 도구) -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- 웹 폰트 및 스크롤바 스타일 -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
+    
+    body { font-family: 'Noto Sans KR', sans-serif; }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+  </style>
+</head>
+<body class="bg-slate-50">
+  
+  <!-- 리액트 앱이 들어갈 자리 -->
+  <div id="root"></div>
+
+  <!-- 여기서부터 담당자님의 리액트 코드입니다 -->
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    function App() {
+      // 화면 상태 관리: 'home'(첫 화면), 'learn'(학습 모드), 'quiz'(퀴즈 모드)
+      const [currentView, setCurrentView] = useState('home');
+
+      const tabs = [
+        '공통', '가공부', '판넬조립부', '대조립부', '선행의장부', 
+        '선행도장부', '의장부', '건조부', '선실생산부', '선박커미셔닝부'
+      ];
+      const [activeTab, setActiveTab] = useState(tabs[0]);
+
+      // 10개 부서의 전체 완벽한 데이터
+      const learningData = useMemo(() => ({
+        '공통': [
+          { id: 1, category: '안전 및 보호구', term: '보호구 착용해', meaning: '', vi: 'Hãy mặc đồ bảo hộ đầy đủ', pron: 'Bô-hô-gu chắc-yong-he' },
+          { id: 2, category: '안전 및 보호구', term: '안전벨트 체결해', meaning: '', vi: 'Hãy thắt chặt dây an toàn', pron: 'An-chơn-bên-thư chê-gyơn-he' },
+          { id: 3, category: '안전 및 보호구', term: '벨트 꼭 매', meaning: '', vi: 'Hãy thắt chặt dây an toàn', pron: 'Bên-thư cốc me' },
+          { id: 4, category: '안전 및 보호구', term: '보안경 착용해', meaning: '', vi: 'Hãy đeo kính bảo hộ', pron: 'Bô-an-gyơng chắc-yong-he' },
+          { id: 5, category: '안전 및 보호구', term: '귀마개 착용해', meaning: '', vi: 'Hãy đeo nút bịt tai', pron: 'Gwi-ma-ge chắc-yong-he' },
+          { id: 6, category: '안전 및 보호구', term: '3타점 준수해', meaning: '', vi: 'Tuân thủ quy tắc ba điểm tựa', pron: 'Xam-tha-chơm chun-xu-he' },
+          { id: 7, category: '안전 및 보호구', term: '뒷걸음질 금지해', meaning: '', vi: 'Cấm đi lùi', pron: 'Dwít-gơ-rưm-chil gưm-chi-he' },
+          { id: 8, category: '안전 및 보호구', term: '추락 조심해', meaning: '', vi: 'Cẩn thận rơi ngã', pron: 'Chu-rác chô-xim-he' },
+          { id: 9, category: '안전 및 보호구', term: '낙하물 조심해', meaning: '', vi: 'Cẩn thận vật rơi từ trên xuống', pron: 'Nác-ha-mun chô-xim-he' },
+          { id: 10, category: '안전 전반', term: '난간을 잡아', meaning: '', vi: 'Hãy bám vào lan can', pron: 'Nan-gan-ưn cha-ba' },
+          { id: 11, category: '안전 전반', term: '협착 사고 조심해', meaning: '', vi: 'Cẩn thận tai nạn kẹp, cuốn', pron: 'Hyớp-chác xa-gô chô-xim-he' },
+          { id: 12, category: '안전 전반', term: '안전 통로 이용해', meaning: '', vi: 'Hãy sử dụng lối đi an toàn', pron: 'An-chơn thông-nô i-yong-he' },
+          { id: 13, category: '안전 전반', term: '화기 감시해', meaning: '', vi: 'Giám sát lửa, phòng cháy', pron: 'Hwa-gi gam-xi-he' },
+          { id: 14, category: '안전 전반', term: '소화기 위치 확인해', meaning: '', vi: 'Kiểm tra vị trí bình chữa cháy', pron: 'Xô-hwa-gi wi-chi hwa-gin-he' },
+          { id: 15, category: '안전 전반', term: '비상 탈출구 봐둬', meaning: '', vi: 'Hãy chú ý lối thoát hiểm', pron: 'Bi-xang thal-chul-gu bwa-đwơ' },
+          { id: 16, category: '안전 전반', term: '구급상자 위치 봐', meaning: '', vi: 'Xem vị trí hộp sơ cứu', pron: 'Gu-gưp-xang-cha wi-chi bwa' },
+          { id: 17, category: '안전 전반', term: '밀폐 구역 조심해', meaning: '', vi: 'Cẩn thận không gian kín, ngạt khí', pron: 'Min-phê gu-yớc chô-xim-he' },
+          { id: 18, category: '안전 전반', term: '안전 교육 받아', meaning: '', vi: 'Hãy tham gia huấn luyện an toàn', pron: 'An-chơn gyô-yúc ba-đa' },
+          { id: 19, category: '작업 준비 및 소통', term: '단도리 해', meaning: '작업 준비 철저히 해', vi: 'Chuẩn bị kỹ càng, thu xếp gọn gàng', pron: 'Đan-đô-ri he' },
+          { id: 20, category: '작업 준비 및 소통', term: 'TBM 실시해', meaning: '', vi: 'Thực hiện TBM', pron: 'Thi-bi-em xil-xi-he' },
+          { id: 21, category: '작업 준비 및 소통', term: 'TBM 등록해', meaning: '', vi: 'Đăng ký TBM', pron: 'Thi-bi-em đưng-nốc-he' },
+          { id: 22, category: '작업 준비 및 소통', term: '도면 확인해', meaning: '', vi: 'Kiểm tra bản vẽ', pron: 'Đô-myơn hwa-gin-he' },
+          { id: 23, category: '작업 준비 및 소통', term: '도면 가져와', meaning: '', vi: 'Mang bản vẽ tới', pron: 'Đô-myơn ga-chyơ-wa' },
+          { id: 24, category: '작업 준비 및 소통', term: '작업 완료 보고해', meaning: '', vi: 'Báo cáo khi hoàn thành công việc', pron: 'Cha-gớp wal-lyô bô-gô-he' },
+          { id: 25, category: '작업 준비 및 소통', term: '수신호 해', meaning: '', vi: 'Làm tín hiệu tay', pron: 'Xu-xin-hô he' },
+          { id: 26, category: '작업 준비 및 소통', term: '허가증 받아와', meaning: '', vi: 'Đi lấy giấy phép làm việc', pron: 'Hơ-ga-chưng ba-đa-wa' },
+          { id: 27, category: '작업 준비 및 소통', term: '비상 연락처 저장해', meaning: '', vi: 'Lưu số điện thoại liên lạc khẩn cấp', pron: 'Bi-xang yơn-lác-chơ chơ-chang-he' },
+          { id: 28, category: '작업 준비 및 소통', term: '아프면 보고해', meaning: '', vi: 'Nếu ốm đau hãy báo cáo ngay', pron: 'A-phư-myơn bô-gô-he' },
+          { id: 29, category: '작업 지시', term: '사상해', meaning: '표면을 매끄럽게 갈아내', vi: 'Mài nhẵn bề mặt', pron: 'Xa-xang-he' },
+          { id: 30, category: '작업 지시', term: '갈아', meaning: '', vi: 'Mài đi', pron: 'Ga-ra' },
+          { id: 31, category: '작업 지시', term: '볼팅해', meaning: '', vi: 'Xiết chặt bu lông, bắt vít', pron: 'Bôn-thing-he' },
+          { id: 32, category: '작업 지시', term: '자재 탑재해', meaning: '', vi: 'Đưa vật tư lên tàu', pron: 'Cha-che tháp-che-he' },
+          { id: 33, category: '작업 지시', term: '유니트 탑재해', meaning: '', vi: 'Đưa block lên tàu', pron: 'Yu-ni-thư tháp-che-he' },
+          { id: 34, category: '작업 지시', term: '가스켓 넣어', meaning: '', vi: 'Nhét gioăng vào', pron: 'Ga-xư-kết nơ-ơ' },
+          { id: 35, category: '작업 지시', term: '가스켓 끼워', meaning: '', vi: 'Lắp gioăng vào', pron: 'Ga-xư-kết kki-wơ' },
+          { id: 36, category: '작업 지시', term: '에어불이 해', meaning: '에어로 먼지 불어내', vi: 'Thổi khí nén để làm sạch bụi', pron: 'E-ơ-bu-ri he' },
+          { id: 37, category: '작업 지시', term: '송풍기 가동해', meaning: '', vi: 'Bật quạt thông gió', pron: 'Xông-phung-gi ga-đông-he' },
+          { id: 38, category: '작업 지시', term: '사다리 고정해', meaning: '', vi: 'Cố định thang chắc chắn', pron: 'Xa-đa-ri gô-chơng-he' },
+          { id: 39, category: '작업 지시', term: '장비 비 보호해', meaning: '', vi: 'Che chắn thiết bị khỏi mưa', pron: 'Chang-bi bi bô-hô-he' },
+          { id: 40, category: '작업 지시', term: '갑바 쳐', meaning: '장비에 덮개 씌워', vi: 'Phủ bạt lên', pron: 'Gáp-ba chyơ' },
+          { id: 41, category: '정리 정돈 및 마무리', term: '시마이해', meaning: '일 끝내고 마무리해', vi: 'Kết thúc công việc', pron: 'Xi-mai-he' },
+          { id: 42, category: '정리 정돈 및 마무리', term: '시마이하자', meaning: '일 끝내고 마무리하자', vi: 'Cùng dọn dẹp nghỉ nào', pron: 'Xi-mai-ha-cha' },
+          { id: 43, category: '정리 정돈 및 마무리', term: '야리끼리 해', meaning: '작업량 다 채우고 쉬어', vi: 'Làm khoán, làm xong việc được nghỉ', pron: 'Ya-ri-kki-ri he' },
+          { id: 44, category: '정리 정돈 일상', term: '마이존 청소해', meaning: '', vi: 'Dọn dẹp khu vực làm việc của mình', pron: 'Ma-i-chôn chơng-xô-he' },
+          { id: 45, category: '정리 정돈 일상', term: '빈 깡통 치워', meaning: '', vi: 'Dọn các vỏ lon rỗng', pron: 'Bin kkang-thông chi-wơ' },
+          { id: 46, category: '정리 정돈 일상', term: '빈 박스 치워', meaning: '', vi: 'Dọn các hộp carton rỗng', pron: 'Bin bác-xư chi-wơ' },
+          { id: 47, category: '정리 정돈 일상', term: '마대에 담아', meaning: '', vi: 'Bỏ rác vào bao tải', pron: 'Ma-đe-e đa-ma' },
+          { id: 48, category: '정리 정돈 일상', term: '숙소 청소해', meaning: '', vi: 'Dọn dẹp vệ sinh ký túc xá', pron: 'Xúc-xô chơng-xô-he' },
+          { id: 49, category: '기타 생활 및 소통', term: '음주 작업 금지해', meaning: '', vi: 'Cấm làm việc khi say rượu', pron: 'Ưm-chu cha-gớp gưm-chi-he' },
+          { id: 50, category: '기타 생활 및 소통', term: '수분 섭취해', meaning: '', vi: 'Uống nhiều nước', pron: 'Xu-bun xớp-chwi-he' },
+          { id: 51, category: '기타 생활 및 소통', term: '포도당 먹어', meaning: '', vi: 'Uống viên muối, đường glucose', pron: 'Phô-đô-đang mớ-gơ' },
+          { id: 52, category: '기타 생활 및 소통', term: '고생했어', meaning: '', vi: 'Bạn vất vả rồi, cảm ơn vì đã chăm chỉ', pron: 'Gô-xeng-hét-xơ' },
+          { id: 53, category: '기타 생활 및 소통', term: '내일 봐', meaning: '', vi: 'Hẹn gặp lại vào ngày mai', pron: 'Ne-in bwa-yô' }
+        ],
+        '가공부': [
+          { id: 1, category: '절단/마킹', term: 'NC 커팅 시작해', meaning: '기계 절단 시작해', vi: 'Bắt đầu cắt NC', pron: 'Ên-xi khơ-thing xi-chác-he' },
+          { id: 2, category: '절단/마킹', term: '철판 마킹 확인해', meaning: '', vi: 'Kiểm tra đánh dấu trên thép', pron: 'Chơn-phan ma-khing hwa-gin-he' },
+          { id: 3, category: '절단/마킹', term: '모재 두께 재봐', meaning: '', vi: 'Đo độ dày vật liệu cơ bản', pron: 'Mô-che đu-kke che-bwa' },
+          { id: 4, category: '절단/마킹', term: '개선 가공 해', meaning: '가장자리 깎아내 (V커팅)', vi: 'Gia công mép hàn', pron: 'Ge-xơn ga-gông he' },
+          { id: 5, category: '절단/마킹', term: '판재 번호 써', meaning: '', vi: 'Viết số tấm', pron: 'Phan-che bơn-hô xxơ' },
+          { id: 6, category: '절단/마킹', term: '커팅 속도 조절해', meaning: '', vi: 'Điều chỉnh tốc độ cắt', pron: 'Khơ-thing xốc-đô chô-chơn-he' },
+          { id: 7, category: '절단/마킹', term: '도면 치수랑 맞춰봐', meaning: '', vi: 'So sánh với kích thước bản vẽ', pron: 'Đô-myơn chi-xu-rang mát-chwơ-bwa' },
+          { id: 8, category: '절단/마킹', term: '프라즈마 체크해', meaning: '', vi: 'Kiểm tra máy plasma', pron: 'Phư-ra-chư-ma chê-khư-he' },
+          { id: 9, category: '절단/마킹', term: '캇타 써라', meaning: '절단기 사용해', vi: 'Dùng máy cắt đi', pron: 'Khát-tha-xxơ-ra' },
+          { id: 10, category: '취부/용접', term: '피스 발라버려라', meaning: '', vi: 'Gắn miếng hàn phụ', pron: 'Phi-xư ban-ra-bơ-ryơ-ra' },
+          { id: 11, category: '취부/용접', term: '후레임 꼬매라', meaning: '프레임 용접해', vi: 'Hàn dính khung', pron: 'Hu-rê-im kkô-me-ra' },
+          { id: 12, category: '취부/용접', term: '주판 꼬매라', meaning: '큰 철판 용접해', vi: 'Hàn dính tấm chính', pron: 'Chu-phan kkô-me-ra' },
+          { id: 13, category: '취부/용접', term: '더때기 해서 발라 불어', meaning: '보강재 덧대서 용접해', vi: 'Ốp thêm rồi hàn vào', pron: 'Đớ-tte-gi he-xơ ban-ra bu-rơ' },
+          { id: 14, category: '취부/용접', term: '스티프너 세워서 잡어야', meaning: '보강재 세워서 용접해', vi: 'Dựng thanh gia cố lên rồi hàn', pron: 'Xư-thi-phư-nơ xê-wơ-xơ cha-bơ-ya' },
+          { id: 15, category: '취부/용접', term: '반반 먹어라', meaning: '양쪽 똑같이 나눠서 해', vi: 'Chia đều hai bên mà làm', pron: 'Ban-ban mớ-gơ-ra' },
+          { id: 16, category: '취부/용접', term: '지그제그 용접 해라', meaning: '', vi: 'Hàn zíc zắc', pron: 'Chi-gư-chê-gư yông-chớp he-ra' },
+          { id: 17, category: '취부/용접', term: '임시 피스 단단히 때워라', meaning: '', vi: 'Hàn thật chặt miếng hàn tạm', pron: 'Im-xi phi-xư đan-đan-hi tte-wơ-ra' },
+          { id: 18, category: '취부/용접', term: '양쪽 지져라', meaning: '양쪽 가접해', vi: 'Hàn đính cả hai bên', pron: 'Yang-chốc chi-chyơ-ra' },
+          { id: 19, category: '취부/용접', term: '철판 좀 붙여라', meaning: '철판 용접해', vi: 'Hàn gắn tấm thép lại', pron: 'Chơn-phan chôm bu-chyơ-ra' },
+          { id: 20, category: '취부/용접', term: '블록 터지니께 야무지게 해야', meaning: '튼튼하게 용접해', vi: 'Khối dễ nứt nên phải hàn kỹ', pron: 'Bư-lốc thớ-chi-ni-kke ya-mu-chi-ge he-ya' },
+          { id: 21, category: '수정/사상', term: '사비 털어', meaning: '녹 제거해', vi: 'Cạo gỉ sét đi', pron: 'Xa-bi thơ-rơ' },
+          { id: 22, category: '수정/사상', term: '슬래그 제거해', meaning: '', vi: 'Loại bỏ xỉ hàn', pron: 'Xư-lê-gư chê-gơ-he' },
+          { id: 23, category: '수정/사상', term: '스파타 털어', meaning: '용접 찌꺼기 털어', vi: 'Phủi vụn tia lửa hàn', pron: 'Xư-pha-tha thơ-rơ' },
+          { id: 24, category: '수정/사상', term: '뺑끼 발라', meaning: '페인트 칠해', vi: 'Quét sơn lên', pron: 'Ppeng-kki ban-ra' },
+          { id: 25, category: '수정/사상', term: '뺑끼 까고 발라', meaning: '페인트 벗기고 다시 칠해', vi: 'Cạo sơn cũ rồi quét dặm lại', pron: 'Ppeng-kki kka-gô ban-ra' },
+          { id: 26, category: '수정/사상', term: '블록에 불줘', meaning: '열 가해서 모양 잡아', vi: 'Gia nhiệt uốn lại cho khối', pron: 'Bư-lốc-ê bun-chwơ' },
+          { id: 27, category: '수정/사상', term: '불질 좀 해라', meaning: '열 가해서 모양 잡아', vi: 'Khò lửa uốn lại đi', pron: 'Bun-chil chôm he-ra' },
+          { id: 28, category: '수정/사상', term: '가우징 까불어', meaning: '용접 불량 녹여서 깎아내', vi: 'Thổi điện khoét rãnh', pron: 'Ga-u-ching kka-bu-rơ' },
+          { id: 29, category: '수정/사상', term: '탭피스 데불어', meaning: '임시 조각 붙여서 수평 맞춰', vi: 'Gắn miếng hàn phụ để làm phẳng', pron: 'Thép-phi-xư đê-bu-rơ' },
+          { id: 30, category: '수정/사상', term: '절단면 사상해', meaning: '절단면 갈아내', vi: 'Mài nhẵn mặt cắt', pron: 'Chơn-đan-myơn xa-xang-he' },
+          { id: 31, category: '수정/사상', term: '워싱작업해', meaning: '물로 씻어내', vi: 'Rửa bằng nước', pron: 'Wơ-xing-cha-gớp-he' },
+          { id: 32, category: '공구/장비', term: '야 가지고 와', meaning: '쐐기(고임목) 가져와', vi: 'Lấy cái đệm (căn) lại đây', pron: 'Ya ga-chi-gô wa' },
+          { id: 33, category: '공구/장비', term: '데꼬파이프 가지고 와', meaning: '지렛대 파이프 가져와', vi: 'Lấy đòn bẩy lại đây', pron: 'Đê-kkô-pha-i-phư ga-chi-gô wa' },
+          { id: 34, category: '공구/장비', term: '레바로 당겨불어', meaning: '레버풀러로 당겨', vi: 'Kéo bằng palăng tay', pron: 'Rê-ba-rô đang-gyơ-bu-rơ' },
+          { id: 35, category: '공구/장비', term: '니플 암놈 숫놈 갑시다', meaning: '에어 연결부 교체하자', vi: 'Lắp đầu nối âm đi', pron: 'Ni-phưn am-nôm gáp-xi-đa' },
+          { id: 36, category: '공구/장비', term: '볼트 시메루해', meaning: '볼트 꽉 조여', vi: 'Xiết chặt bu lông lại', pron: 'Bôn-thư xi-mê-ru-he' },
+          { id: 37, category: '공구/장비', term: '하카 체결해', meaning: '클램프 꽉 고정해', vi: 'Gắn kẹp nâng tấm thép', pron: 'Ha-kha chê-gyơn-he' },
+          { id: 38, category: '작업/환경', term: '모루에 가서 해라', meaning: '작업대 가서 해', vi: 'Ra bàn làm việc mà làm', pron: 'Mô-ru-ê ga-xơ he-ra' },
+          { id: 39, category: '작업/환경', term: '씹힌다', meaning: '끼인다 (눌린다)', vi: 'Bị kẹt, Bị cuốn vào', pron: 'Xxíp-hin-đa' }
+        ],
+        '판넬조립부': [
+          { id: 1, category: '취부/조립', term: '론지 배치해', meaning: '', vi: 'Bố trí thanh dọc', pron: 'Rôn-chi bê-chi-he' },
+          { id: 2, category: '취부/조립', term: '론지 간격 재봐', meaning: '', vi: 'Kiểm khoảng cách giữa các thanh dọc', pron: 'Rôn-chi gan-gyớc che-bwa' },
+          { id: 3, category: '취부/조립', term: '론지 똑바로 세워', meaning: '', vi: 'Dựng thẳng thanh dọc', pron: 'Rôn-chi ttốc-ba-rô xê-wơ' },
+          { id: 4, category: '취부/조립', term: '끝부분 맞춰', meaning: '', vi: 'Căn bằng phần đuôi', pron: 'Kkứt-bu-bun mát-chwơ' },
+          { id: 5, category: '취부/조립', term: '부재 직각 맞춰', meaning: '', vi: 'Căn góc vuông cho cấu kiện', pron: 'Bu-che chíc-gác mát-chwơ' },
+          { id: 6, category: '취부/조립', term: '단틈 맞춰', meaning: '단차(높낮이) 맞춰', vi: 'Căn chỉnh độ chênh lệch (khe hở)', pron: 'Đan-thưm mát-chwơ' },
+          { id: 7, category: '취부/조립', term: '가다 라인 맞춰', meaning: '거더(Gir) 마킹라인에 맞춰', vi: 'Căn chỉnh dầm theo vạch lấy dấu', pron: 'Ga-đa ra-in mát-chwơ' },
+          { id: 8, category: '취부/조립', term: '부재 라인 맞춰', meaning: '부재 마킹라인에 맞춰', vi: 'Căn chỉnh cấu kiện theo vạch lấy dấu', pron: 'Bu-che ra-in mát-chwơ' },
+          { id: 9, category: '취부/조립', term: '취부 피스 박아', meaning: '', vi: 'Hàn dính miếng gá để lắp ráp tạm', pron: 'Chwi-bu phi-xư ba-ga' },
+          { id: 10, category: '취부/조립', term: '부재 밀리지 않게 해', meaning: '', vi: 'Cố định chặt để cấu kiện không bị xê dịch', pron: 'Bu-che min-ri-chi an-khe he' },
+          { id: 11, category: '취부/조립', term: '브라켓 붙여', meaning: '', vi: 'Lắp giá đỡ (bracket) vào', pron: 'Bư-ra-khết bu-chyơ' },
+          { id: 12, category: '취부/조립', term: '버티컬 찝어', meaning: '버티컬 취부해', vi: 'Hàn đính cấu kiện dọc', pron: 'Bơ-thi-khơn cci-bơ' },
+          { id: 13, category: '취부/조립', term: '바닥 찝어', meaning: '바닥 취부해', vi: 'Hàn đính mặt đáy', pron: 'Ba-đác cci-bơ' },
+          { id: 14, category: '취부/조립', term: '후로어 탑재해', meaning: '프레임(Fr) 탑재해', vi: 'Lắp ráp khung (frame) lên', pron: 'Hu-rô-ơ tháp-che-he' },
+          { id: 15, category: '취부/조립', term: '아다리가 안맞는다', meaning: '서로 딱 안 맞는다', vi: 'Các cấu kiện không khớp nhau', pron: 'A-đi-ri-ga an-mát-nưn-đa' },
+          { id: 16, category: '취부/조립', term: '부재 나라시 해', meaning: '부재 배열해', vi: 'Xếp các cấu kiện bằng phẳng xuống sàn', pron: 'Bu-che na-ra-xi he' },
+          { id: 17, category: '용접/작업', term: '자동 용접기 가동해', meaning: '', vi: 'Bật máy hàn tự động', pron: 'Cha-đông yông-chớp-gi ga-đông-he' },
+          { id: 18, category: '용접/작업', term: '가접 찍어', meaning: '임시 용접해', vi: 'Hàn đính tạm', pron: 'Ga-chớp cci-gơ' },
+          { id: 19, category: '용접/작업', term: '필렛 용접 해', meaning: '', vi: 'Hàn góc (Hàn fillet)', pron: 'Phil-lết yông-chớp he' },
+          { id: 20, category: '용접/작업', term: '빽 확인해', meaning: '용접 이면부 확인해', vi: 'Kiểm tra mặt sau mối hàn', pron: 'Ppec hwa-gin-he' },
+          { id: 21, category: '용접/작업', term: '빽내', meaning: '심 용접해', vi: 'Hàn lót mặt sau', pron: 'Ppec-ne' },
+          { id: 22, category: '용접/작업', term: '비드 깨끗하게 해', meaning: '', vi: 'Làm sạch đường hàn', pron: 'Bi-đư kke-kkứt-ha-ge he' },
+          { id: 23, category: '용접/작업', term: '언더컷 안 나게 해', meaning: '', vi: 'Cẩn thận đừng để bị lỗi lẹm chân hàn', pron: 'Ơn-đơ-khớt an na-ge he' },
+          { id: 24, category: '용접/작업', term: '너무 오래 지지지 마', meaning: '너무 오래 용접하지 마', vi: 'Đừng khò lửa, hàn một chỗ quá lâu', pron: 'Nơ-mu ô-re chi-chi-chi ma' },
+          { id: 25, category: '용접/작업', term: '용접 겹치지 않게 해', meaning: '', vi: 'Chú ý đừng để đường hàn bị chồng lên nhau', pron: 'Yông-chớp gyớp-chi-chi an-khe he' },
+          { id: 26, category: '용접/작업', term: '리꾸 박아라', meaning: '갭부분 용접으로 채워라', vi: 'Đắp hàn bù vào chỗ khe hở rộng', pron: 'Ri-kku ba-ga-ra' },
+          { id: 27, category: '용접/작업', term: '와이어 잘 나오나 봐', meaning: '', vi: 'Kiểm tra xem dây cáp hàn ra đều không', pron: 'Wa-i-ơ chal na-ô-na bwa' },
+          { id: 28, category: '용접/작업', term: '와이어 교체해', meaning: '', vi: 'Thay dây cáp hàn', pron: 'Wa-i-ơ gyô-chê-he' },
+          { id: 29, category: '용접/작업', term: '어스 제대로 집어', meaning: '접지 꽉 물려', vi: 'Kẹp dây mát (tiếp địa) cho cẩn thận', pron: 'Ơ-xư chê-đe-rô chi-bơ' },
+          { id: 30, category: '용접/작업', term: '토치 노즐 닦아', meaning: '', vi: 'Lau sạch đầu bép hàn (mỏ hàn)', pron: 'Thô-chi nô-chưn đa-kka' },
+          { id: 31, category: '검사/수정', term: '정반 수평 확인해', meaning: '', vi: 'Kiểm tra độ cân bằng của bàn thao tác', pron: 'Chơng-ban xu-phyơng hwa-gin-he' },
+          { id: 32, category: '검사/수정', term: '똥 제거해', meaning: '용접 찌꺼기 치워', vi: 'Loại bỏ xỉ hàn', pron: 'Ttông chê-gơ-he' },
+          { id: 33, category: '검사/수정', term: '기라성 제거하자', meaning: '용접 슬래그 제거하자', vi: 'Loại bỏ bụi tia lửa hàn', pron: 'Gi-ra-xơng chê-gơ-he' },
+          { id: 34, category: '검사/수정', term: '스파타 제거해', meaning: '용접 불꽃 찌꺼기 제거해', vi: 'Loại bỏ bụi tia lửa hàn', pron: 'Xư-pha-tha chê-gơ-he' },
+          { id: 35, category: '검사/수정', term: '리바리 불어', meaning: '찌꺼기 불어내', vi: 'Thổi sạch hoàn toàn cặn bẩn và vết tích', pron: 'Ri-ba-ri bu-rơ' },
+          { id: 36, category: '검사/수정', term: '턴오버 해', meaning: '', vi: 'Lật khối block (bằng cẩu)', pron: 'Thơn-ô-bơ he' },
+          { id: 37, category: '검사/수정', term: '철판 뒤틀림 봐', meaning: '', vi: 'Kiểm tra độ cong vênh của thép', pron: 'Chơn-phan dwit-thưn-rim bwa' },
+          { id: 38, category: '검사/수정', term: '부재 데미지 펴', meaning: '부재 곡직 작업해', vi: 'Nắn phẳng lại', pron: 'Đê-mi-chi phyơ' },
+          { id: 39, category: '검사/수정', term: '여기 오작났으니 수정하자', meaning: '잘못 작업되었으니 수정하자', vi: 'Chỗ này làm sai rồi, hãy sửa lại đi', pron: 'Yơ-gi ô-chác-nát-xư-ni xu-chơng-ha-cha' },
+          { id: 40, category: '검사/수정', term: '징크 발라', meaning: '징크 터치업 작업해', vi: 'Quét sơn mạ kẽm', pron: 'Ching-khư ban-ra' },
+          { id: 41, category: '검사/수정', term: '징크볼라', meaning: '징크 발라', vi: 'Quét sơn mạ kẽm', pron: 'Ching-khư-bôn-ra' },
+          { id: 42, category: '장비/공구', term: '마그네트 써', meaning: '', vi: 'Dùng nam châm', pron: 'Ma-gư-nê-thư xxơ' },
+          { id: 43, category: '장비/공구', term: '인치 당겨', meaning: '레바블록 체결해서 당겨', vi: 'Kéo palăng xích', pron: 'In-chi đang-gyơ' },
+          { id: 44, category: '장비/공구', term: '레바 땡겨', meaning: '레바 풀러 당겨', vi: 'Kéo đòn bẩy', pron: 'Rê-ba tteng-gyơ' },
+          { id: 45, category: '장비/공구', term: '깔깔이로 작업해', meaning: '라쳇푸셔로 작업하세요', vi: 'Làm bằng cảo lắc tay (ratchet)', pron: 'Kkal-kkal-i-rô cha-gớp-he' },
+          { id: 46, category: '장비/공구', term: '썰어브러', meaning: '절단해', vi: 'Cắt đi', pron: 'Xxơ-rơ-bư-rơ' },
+          { id: 47, category: '장비/공구', term: '문대브러', meaning: '사상해', vi: 'Mài nhẵn đi', pron: 'Mun-đe-bư-rơ' },
+          { id: 48, category: '장비/공구', term: '가스통 바꿔', meaning: '', vi: 'Thay bình khí gas đi', pron: 'Ga-xư-thông ba-kkwơ' }
+        ],
+        '대조립부': [
+          { id: 1, category: '취부/탑재', term: '핀지그 높이 조절해', meaning: '', vi: 'Điều chỉnh độ cao pin jig', pron: 'Phin-chi-gư nô-phi chô-chơn-he' },
+          { id: 2, category: '취부/탑재', term: '갭 줄여', meaning: '', vi: 'Thu hẹp khoảng hở (gap)', pron: 'Gép chu-ryơ' },
+          { id: 3, category: '취부/탑재', term: '서포트 세워', meaning: '', vi: 'Dựng giá đỡ (support) lên', pron: 'Xơ-phô-thư xê-wơ' },
+          { id: 4, category: '취부/탑재', term: '턴오버 작업 시 반경 비우세요', meaning: '', vi: 'Tránh xa bán kính khi lật block', pron: 'Thơn-ô-bơ cha-gớp xi ban-gyơng bi-u-xê-yô' },
+          { id: 5, category: '취부/탑재', term: '센터 라인 맞춰', meaning: '', vi: 'Căn đúng đường trung tâm', pron: 'Xen-thơ ra-in mát-chwơ' },
+          { id: 6, category: '취부/탑재', term: '단차 확인해', meaning: '', vi: 'Kiểm tra độ chênh lệch', pron: 'Đan-cha hwa-gin-he' },
+          { id: 7, category: '취부/탑재', term: '가이드 피스 용접해', meaning: '', vi: 'Hàn miếng dẫn hướng (guide piece)', pron: 'Ga-i-đư phi-xư yông-chớp-he' },
+          { id: 8, category: '취부/탑재', term: '피스 위치가 도면이랑 다릅니다', meaning: '', vi: 'Vị trí miếng gá khác với bản vẽ', pron: 'Phi-xư wi-chi-ga đô-myơn-i-rang đa-rưm-ni-đa' },
+          { id: 9, category: '취부/탑재', term: '마킹 선 따라서 배치하세요', meaning: '', vi: 'Bố trí theo đường đánh dấu', pron: 'Ma-khing xơn tta-ra-xơ be-chi-ha-xê-yô' },
+          { id: 10, category: '취부/탑재', term: '반목 수평 맞는지 확인하세요', meaning: '', vi: 'Kiểm tra xem bệ đỡ có cân bằng không', pron: 'Ban-mốc xu-phyơng mát-nưn-chi hwa-gin-ha-xê-yô' },
+          { id: 11, category: '취부/탑재', term: '실제 길이 재봐', meaning: '', vi: 'Đo chiều dài thực tế xem', pron: 'Xil-chê gi-ri che-bwa' },
+          { id: 12, category: '용접/수정', term: '러그 용접해', meaning: '', vi: 'Hàn móc cẩu (lug)', pron: 'Rơ-gư yông-chớp-he' },
+          { id: 13, category: '용접/수정', term: '러그 제거해', meaning: '', vi: 'Tháo móc cẩu (lug) ra', pron: 'Rơ-gư chê-gơ-he' },
+          { id: 14, category: '용접/수정', term: '가우징 파', meaning: '', vi: 'Thổi than khoét rãnh (gouging)', pron: 'Ga-u-ching pha' },
+          { id: 15, category: '용접/수정', term: '결함 부위 파내', meaning: '결함 부위 가우징해', vi: 'Đào (khoét) phần bị lỗi ra', pron: 'Gyơ-ram bu-wi pha-ne' },
+          { id: 16, category: '용접/수정', term: '백 가우징 깊이 확인하세요', meaning: '', vi: 'Kiểm tra độ sâu thổi than mặt sau', pron: 'Béc ga-u-ching gi-phi hwa-gin-ha-xê-yô' },
+          { id: 17, category: '용접/수정', term: '육성해', meaning: '육성 용접 해', vi: 'Đắp hàn bù (hàn build-up)', pron: 'Yúc-xơng-he' },
+          { id: 18, category: '용접/수정', term: '데나오시 해', meaning: '보수 작업해', vi: 'Làm lại phần lỗi (sửa lỗi)', pron: 'Đê-na-ô-xi he' },
+          { id: 19, category: '용접/수정', term: '루트 간격이 너무 넓습니다', meaning: '', vi: 'Khe hở chân mối hàn quá rộng', pron: 'Ru-thư gan-gyơ-gi nơ-mu nơm-xưm-ni-đa' },
+          { id: 20, category: '용접/수정', term: '홀딩 상태에서 용접하세요', meaning: '', vi: 'Hãy hàn trong trạng thái cố định chặt', pron: 'Hôn-đing xang-thê-ê-xơ yông-chớp-ha-xê-yô' },
+          { id: 21, category: '용접/수정', term: '베벨 각도 다시 잡으세요', meaning: '', vi: 'Chỉnh lại góc vát (bevel)', pron: 'Bê-bên gác-đô đa-xi cha-bư-xê-yô' },
+          { id: 22, category: '검사/테스트', term: '정도 체크해', meaning: '수직 수평 재봐', vi: 'Kiểm tra độ chính xác (kích thước)', pron: 'Chơng-đô chê-khư-he' },
+          { id: 23, category: '검사/테스트', term: '수압 테스트 준비 완료됐나요?', meaning: '', vi: 'Đã chuẩn bị xong thử áp lực nước chưa?', pron: 'Xu-áp thê-xư-thư chun-bi wal-lyô-đwén-na-yô' },
+          { id: 24, category: '검사/테스트', term: '이면 확인해', meaning: '', vi: 'Kiểm tra mặt sau', pron: 'I-myơn hwa-gin-he' },
+          { id: 25, category: '검사/테스트', term: 'RT 구간 대피하세요', meaning: '', vi: 'Tránh khỏi khu vực chụp RT (X-quang)', pron: 'Al-thi gu-gan đê-phi-ha-xê-yô' },
+          { id: 26, category: '검사/테스트', term: '선주 검사 대비 청소하세요', meaning: '', vi: 'Dọn dẹp chuẩn bị cho chủ tàu kiểm tra', pron: 'Xơn-chu gơm-xa đê-bi chơng-xô-ha-xê-yô' },
+          { id: 27, category: '도면/서류', term: '도면 최신 리비전 확인하세요', meaning: '', vi: 'Kiểm tra xem phải bản vẽ mới nhất không', pron: 'Đô-myơn chwê-xin ri-bi-chơn hwa-gin-ha-xê-yô' },
+          { id: 28, category: '검사/수정', term: '오작 난 부분 마킹해 뒀습니다', meaning: '', vi: 'Đã đánh dấu phần làm sai', pron: 'Ô-chác nan bu-bun ma-khing-he đwớt-xưm-ni-đa' },
+          { id: 29, category: '블록/탑재', term: '블록 탑재 대기해', meaning: '', vi: 'Chờ lắp ráp block', pron: 'Bư-lốc tháp-che đê-gi-he' },
+          { id: 30, category: '장비/공구', term: '샤클 채워', meaning: '', vi: 'Khóa ma ní (shackle) lại', pron: 'Xa-khưn che-wơ' },
+          { id: 31, category: '장비/공구', term: '샤클 핀 끝까지 잠그세요', meaning: '', vi: 'Khóa chặt chốt ma ní vào', pron: 'Xa-khưn phin kkứt-kka-chi cham-gư-xê-yô' },
+          { id: 32, category: '장비/공구', term: '유압 잭 가져와', meaning: '', vi: 'Lấy kích thủy lực lại đây', pron: 'Yu-áp chéc ga-chyơ-wa' },
+          { id: 33, category: '장비/공구', term: '줄걸이 상태 확인해', meaning: '', vi: 'Kiểm tra tình trạng dây cẩu', pron: 'Chul-gơ-ri xang-thê hwa-gin-he' },
+          { id: 34, category: '장비/공구', term: '슬링벨트 확인해', meaning: '', vi: 'Kiểm tra dây cáp vải (sling belt)', pron: 'Xư-ling-bên-thư hwa-gin-he' },
+          { id: 35, category: '장비/공구', term: '클램프 제대로 물렸는지 보세요', meaning: '', vi: 'Xem kẹp (clamp) đã ngậm chặt chưa', pron: 'Khư-lem-phư chê-đe-rô mun-ryớt-nưn-chi bô-xê-yô' },
+          { id: 36, category: '장비/공구', term: '지브 크레인 간섭 주의하세요', meaning: '', vi: 'Chú ý va chạm với cẩu Jib', pron: 'Chi-bư khư-rê-in gan-xớp chu-ưi-ha-xê-yô' },
+          { id: 37, category: '블록/탑재', term: '권상 시작합니다, 대피하세요', meaning: '', vi: 'Bắt đầu nâng hàng, hãy tránh ra', pron: 'Gwơn-xang xi-chác-ham-ni-đa, đê-phi-ha-xê-yô' },
+          { id: 38, category: '블록/탑재', term: '블록 탑재 일정 당겨졌습니다', meaning: '', vi: 'Lịch cẩu block đã được đẩy sớm', pron: 'Bư-lốc tháp-che il-chơng đang-gyơ-chyớt-xưm-ni-đa' }
+        ],
+        '선행의장부': [
+          { id: 1, category: '배관/설치', term: '배관 깔아', meaning: '', vi: 'Trải ống ra (Sắp xếp ống)', pron: 'Be-gwan kka-ra' },
+          { id: 2, category: '배관/설치', term: '서포트 용접해', meaning: '', vi: 'Hàn giá đỡ (support)', pron: 'Xơ-phô-thư yông-chớp-he' },
+          { id: 3, category: '배관/설치', term: '서포트 높이 재', meaning: '', vi: 'Đo chiều cao giá đỡ', pron: 'Xơ-phô-thư nô-phi che' },
+          { id: 4, category: '배관/설치', term: '밸브 방향 봐', meaning: '', vi: 'Xem hướng hoạt động của van', pron: 'Bên-bư bang-hyang bwa' },
+          { id: 5, category: '배관/설치', term: '니플 빼', meaning: '매니폴더에서 호스 분리해', vi: 'Rút đầu nối ra', pron: 'Ni-phưn ppe' },
+          { id: 6, category: '배관/설치', term: '파이프 캡 씌워', meaning: '', vi: 'Đậy nắp bảo vệ ống lại', pron: 'Pha-i-phư khép xxi-wơ' },
+          { id: 7, category: '배관/설치', term: '파이프 끝 테이핑해', meaning: '', vi: 'Dán băng keo bảo vệ đầu ống', pron: 'Pha-i-phư kkứt thê-i-phing-he' },
+          { id: 8, category: '배관/설치', term: '파이프 길이 재봐', meaning: '', vi: 'Đo chiều dài ống thử xem', pron: 'Pha-i-phư gi-ri che-bwa' },
+          { id: 9, category: '배관/설치', term: '기계 수평 맞춰', meaning: '', vi: 'Căn bằng máy', pron: 'Gi-gye xu-phyơng mát-chwơ' },
+          { id: 10, category: '배관/설치', term: '플랜지 맞춰', meaning: '연결판 구멍 맞춰', vi: 'Căn khớp mặt bích (flange)', pron: 'Phư-ren-chi mát-chwơ' },
+          { id: 11, category: '배관/설치', term: '케이블 트레이 달아', meaning: '', vi: 'Lắp máng cáp (cable tray)', pron: 'Khê-i-bưn thư-rê-i đa-ra' },
+          { id: 12, category: '배관/설치', term: '엘보 가져와', meaning: 'ㄱ자 관 가져와', vi: 'Lấy ống nối chữ L (ống cùi chỏ) lại đây', pron: 'Ên-bô ga-chyơ-wa' },
+          { id: 13, category: '배관/설치', term: '파이프 내부 청소해', meaning: '', vi: 'Vệ sinh bên trong ống', pron: 'Pha-i-phư ne-bu chơng-xô-he' },
+          { id: 14, category: '배관/설치', term: '라다 설치해', meaning: '사다리 설치해', vi: 'Lắp thang', pron: 'Ra-đa xơn-chi-he' },
+          { id: 15, category: '배관/설치', term: '파이프 같이 들어줘', meaning: '', vi: 'Cùng nâng ống lên giúp', pron: 'Pha-i-phư ga-chi đư-rơ-chwơ' },
+          { id: 16, category: '작업/취부', term: '의장품 조심해', meaning: '', vi: 'Cẩn thận các đồ lắp ráp (outfitting)', pron: 'Ưi-chang-phum chô-xim-he' },
+          { id: 17, category: '작업/취부', term: '의장품 취부해', meaning: '', vi: 'Lắp ráp các đồ outfitting', pron: 'Ưi-chang-phum chwi-bu-he' },
+          { id: 18, category: '작업/취부', term: '나라시 해', meaning: '평평하게 정렬해 깔아', vi: 'Sắp xếp bằng phẳng xuống sàn', pron: 'Na-ra-xi he' },
+          { id: 19, category: '작업/취부', term: '라인 마킹해', meaning: '라인 표시선 그려', vi: 'Đánh dấu đường kẻ (line)', pron: 'Ra-in ma-khing-he' },
+          { id: 20, category: '작업/취부', term: '기명 붙여', meaning: '자재 이름 표시해', vi: 'Dán thẻ tên (tag)', pron: 'Gi-myơng bu-chyơ' },
+          { id: 21, category: '작업/취부', term: '의장 러그 달아', meaning: '', vi: 'Gắn móc cẩu (lug)', pron: 'Ưi-chang rơ-gư đa-ra' },
+          { id: 22, category: '작업/취부', term: '배관 용접사 불러', meaning: '', vi: 'Gọi thợ hàn ống', pron: 'Be-gwan yông-chớp-xa bun-rơ' },
+          { id: 23, category: '작업/취부', term: '장비 녹 사상해', meaning: '', vi: 'Mài gỉ sét của thiết bị', pron: 'Chang-bi nốc xa-xang-he' },
+          { id: 24, category: '작업/취부', term: '용접 부위 사상해', meaning: '', vi: 'Mài nhẵn chỗ hàn', pron: 'Yông-chớp bu-wi xa-xang-he' },
+          { id: 25, category: '작업/취부', term: '주변 똥 치워', meaning: '용접 찌꺼기 치워', vi: 'Dọn xỉ hàn xung quanh', pron: 'Chu-byơn ttông chi-wơ' },
+          { id: 26, category: '작업/취부', term: '화기 보포 깔아', meaning: '용접 시 불받이포 가져와', vi: 'Trải bạt chống cháy', pron: 'Hwa-gi bô-phô kka-ra' },
+          { id: 27, category: '작업/취부', term: '보강재 작업해라', meaning: '취부 하기 전 스트롱백 설치해', vi: 'Làm thanh gia cố đi', pron: 'Bô-gang-che cha-gớp-he-ra' },
+          { id: 28, category: '작업/취부', term: '리바리 불어라', meaning: '피스 제거 하세요', vi: 'Thổi sạch cặn và vết tích đi', pron: 'Ri-ba-ri bu-rơ-ra' },
+          { id: 29, category: '작업/취부', term: '따발총 쏘지마라', meaning: '용접 짧게 끊어서 하지 마', vi: 'Đừng hàn ngắt quãng (kiểu bắn súng máy)', pron: 'Tta-bal-chông xxô-chi-ma-ra' },
+          { id: 30, category: '작업/취부', term: '도랑 파지마라', meaning: '오버 사상 금지', vi: 'Đừng mài sâu quá (đừng đào mương)', pron: 'Đô-rang pha-chi-ma-ra' },
+          { id: 31, category: '작업/취부', term: '빡빡 갈아라', meaning: '힘줘서 확실하게 갈아내', vi: 'Mài thật mạnh vào', pron: 'Ppac-ppac ga-ra-ra' },
+          { id: 32, category: '작업/취부', term: '떡판 쳐라', meaning: '덧판 대고 용접해', vi: 'Ốp thêm tấm phụ rồi hàn', pron: 'Ttớc-phan chyơ-ra' },
+          { id: 33, category: '작업/취부', term: '장비 자리 비워', meaning: '', vi: 'Để trống chỗ cho thiết bị', pron: 'Chang-bi cha-ri bi-wơ' },
+          { id: 34, category: '장비/도구', term: '볼트 너트 챙겨와', meaning: '', vi: 'Mang bu lông, đai ốc lại đây', pron: 'Bôn-thư nơ-thư cheng-gyơ-wa' },
+          { id: 35, category: '장비/도구', term: '자재 창고 다녀와', meaning: '', vi: 'Đi kho vật tư lấy đồ đi', pron: 'Cha-che chang-gô đa-nyơ-wa' },
+          { id: 36, category: '장비/도구', term: '우마 대고 뽑아내라', meaning: '론지 상하단차 작업 시 우마 이용해', vi: 'Kê giàn giáo thấp vào rồi nắn chỉnh', pron: 'U-ma đê-gô ppô-ba-ne-ra' },
+          { id: 37, category: '장비/도구', term: '레바 걸어서 잡다 땡겨라', meaning: '수동 견인기 걸어서 당겨', vi: 'Móc palăng lắc tay vào rồi kéo', pron: 'Rê-ba gơ-rơ-xơ cháp-đa tteng-gyơ-ra' },
+          { id: 38, category: '장비/도구', term: '히빠리 가져와', meaning: '레버풀러 가져와', vi: 'Lấy palăng lắc tay (lever block) lại đây', pron: 'Híp-pa-ri ga-chyơ-wa' },
+          { id: 39, category: '장비/도구', term: '헤자 이동해라', meaning: '블록 리프트 이동해', vi: 'Di chuyển xe nâng', pron: 'Hê-cha i-đông-he-ra' },
+          { id: 40, category: '검사/기타', term: '관철 검사 받아', meaning: '', vi: 'Nhận kiểm tra đường ống (hàn)', pron: 'Gwan-chơn gơm-xa ba-đa' },
+          { id: 41, category: '검사/기타', term: '가압 테스트해', meaning: '', vi: 'Kiểm tra áp suất', pron: 'Ga-áp thê-xư-thư-he' },
+          { id: 42, category: '검사/기타', term: '새 도면인지 확인해', meaning: '', vi: 'Kiểm tra xem có phải bản vẽ mới không', pron: 'Xe đô-myơn-in-chi hwa-gin-he' },
+          { id: 43, category: '검사/기타', term: '오늘 대마다', meaning: '일이 연결이 안되어 퇴근 합니다', vi: 'Hôm nay nghỉ chờ việc', pron: 'Ô-nưn đê-ma-đa' },
+          { id: 44, category: '검사/기타', term: '아다리 걸렸다', meaning: '용접 불빛으로 눈충혈 걸렸다', vi: 'Bị đau mắt do nhìn ánh sáng hàn', pron: 'A-đa-ri gơn-ryớt-đa' },
+          { id: 45, category: '검사/기타', term: '팀장에게 보고해', meaning: '', vi: 'Báo cáo cho tổ trưởng', pron: 'Thim-chang-ê-ge bô-gô-he' }
+        ],
+        '선행도장부': [
+          { id: 1, category: '도장/스프레이', term: '라인큐시 들어가', meaning: '도막(페인트 두께) 재봐', vi: 'Kiểm tra độ dày màng sơn', pron: 'Ra-in-khyu-xi đư-rơ-ga' },
+          { id: 2, category: '도장/스프레이', term: '뺑끼 섞어', meaning: '페인트 섞어', vi: 'Pha sơn đi', pron: 'Ppeng-kki xớ-gơ' },
+          { id: 3, category: '도장/스프레이', term: '롤러 쳐', meaning: '롤러로 칠해', vi: 'Lăn sơn đi', pron: 'Rôn-rơ chyơ' },
+          { id: 4, category: '도장/스프레이', term: '뺑기 색 확인해', meaning: '페인트 색 확인해', vi: 'Kiểm tra màu sơn', pron: 'Ppeng-gi xéc hwa-gin-he' },
+          { id: 5, category: '도장/스프레이', term: '홀리데이 없애', meaning: '뭉쳐서 흘러내린 자국 지워', vi: 'Xóa vết sơn chảy', pron: 'Hôn-ri-đê-i ớp-xe' },
+          { id: 6, category: '도장/스프레이', term: '리스프레이 들어가', meaning: '다시 칠해', vi: 'Phun sơn lại', pron: 'Ri-xư-phư-rê-i đư-rơ-ga' },
+          { id: 7, category: '도장/스프레이', term: '함 더 칠해', meaning: '한 번 더 칠해', vi: 'Sơn thêm 한 lớp nữa', pron: 'Ham đơ chil-he' },
+          { id: 8, category: '도장/스프레이', term: '스프레이 거리 유지해', meaning: '', vi: 'Giữ khoảng cách phun sơn', pron: 'Xư-phư-rê-i gơ-ri yu-chi-he' },
+          { id: 9, category: '도장/스프레이', term: '퍼스트 뿌려', meaning: '1차 도장해', vi: 'Phun sơn lớp 1', pron: 'Phơ-xư-thư ppu-ryơ' },
+          { id: 10, category: '도장/스프레이', term: '세컨 뿌려', meaning: '2차 도장해', vi: 'Phun sơn lớp thứ hai (2nd)', pron: 'Xê-khơn ppu-ryơ' },
+          { id: 11, category: '도장/스프레이', term: '파이널 때려', meaning: '마지막 도장해', vi: 'Phun sơn lớp cuối cùng (Final)', pron: 'Pha-i-nơn tte-ryơ' },
+          { id: 12, category: '도장/스프레이', term: '파이널 볼꺼니까 준비해', meaning: '마지막 검사 준비해', vi: 'Chuẩn bị kiểm tra lớp sơn cuối', pron: 'Pha-i-nơn bôn-kkơ-ni-kka chun-bi-he' },
+          { id: 13, category: '도장/스프레이', term: '오토 롤라 시작해', meaning: '기계 롤러로 칠해', vi: 'Bắt đầu lăn sơn tự động', pron: 'Ô-thô rôn-ra xi-chác-he' },
+          { id: 14, category: '도장/스프레이', term: '스프레이 터치업 시작해', meaning: '스프레이로 부분 칠해', vi: 'Bắt đầu phun dặm lại', pron: 'Xư-phư-rê-i thơ-chi-ớp xi-chác-he' },
+          { id: 15, category: '도장/스프레이', term: '4인치 작업해', meaning: '4인치 롤러로 칠해', vi: 'Làm việc bằng con lăn 4 inch', pron: 'Xa-in-chi cha-gớp-he' },
+          { id: 16, category: '도장/스프레이', term: '베이비로 발라', meaning: '작은 롤러로 칠해', vi: 'Sơn bằng con lăn nhỏ (baby)', pron: 'Bê-i-bi-rô ban-ra' },
+          { id: 17, category: '전처리/표면', term: '빠데 발라', meaning: '파인 곳 퍼티로 메꿔', vi: 'Trét bả matit', pron: 'Ppa-đe ban-ra' },
+          { id: 18, category: '전처리/표면', term: '빼빠 쳐', meaning: '사포로 갈아', vi: 'Đánh giấy ráp', pron: 'Ppe-ppa chyơ' },
+          { id: 19, category: '전처리/표면', term: '클리닝 들어가', meaning: '청소해', vi: 'Tiến hành làm sạch', pron: 'Khưn-ri-ning đư-rơ-ga' },
+          { id: 20, category: '전처리/표면', term: '블로홀 빠데 작업해', meaning: '기포 구멍에 퍼티 발라', vi: 'Trét bả vào các lỗ khí', pron: 'Bưn-rô-hôn ppa-đe cha-gớp-he' },
+          { id: 21, category: '전처리/표면', term: '녹 까고 징크 발라', meaning: '녹 벗기고 아연 페인트 칠해', vi: 'Đánh gỉ và bôi kẽm (zinc)', pron: 'Nốc kka-gô ching-khư ban-ra' },
+          { id: 22, category: '전처리/표면', term: '해바라기 써', meaning: '연마 사포(해바라기) 써', vi: 'Dùng đá mài hoa hướng dương', pron: 'He-ba-ra-gi xxơ' },
+          { id: 23, category: '전처리/표면', term: '샌딩 치고 있어', meaning: '', vi: 'Đang bắn cát làm sạch bề mặt', pron: 'Xen-đing chi-gô ít-xơ' },
+          { id: 24, category: '전처리/표면', term: '바큠 해', meaning: '진공청소기로 청소해', vi: 'Hút bụi đi', pron: 'Ba-khyum he' },
+          { id: 25, category: '장비/재료', term: '신나 가져와', meaning: '페인트 희석제 가져와', vi: 'Lấy dung môi (thinner) lại đây', pron: 'Xin-na ga-chyơ-wa' },
+          { id: 26, category: '장비/재료', term: '도장 호스 청소해', meaning: '', vi: 'Làm sạch ống phun sơn', pron: 'Đô-chang hô-xư chơng-xô-he' },
+          { id: 27, category: '장비/재료', term: '총 확인해', meaning: '스프레이 건 확인해', vi: 'Kiểm tra súng phun sơn', pron: 'Chông hwa-gin-he' },
+          { id: 28, category: '장비/재료', term: '마스킹 해', meaning: '', vi: 'Dán băng keo che chắn', pron: 'Ma-xư-khing he' },
+          { id: 29, category: '장비/재료', term: '테이핑 해', meaning: '', vi: 'Dán băng keo lại', pron: 'Thê-i-phing he' },
+          { id: 30, category: '장비/재료', term: '도막 측정기 가져와', meaning: '페인트 두께 재는 장비 가져와', vi: 'Lấy máy đo độ dày màng sơn lại đây', pron: 'Đô-mác chưc-chơng-gi ga-chyơ-wa' },
+          { id: 31, category: '장비/재료', term: '훗까시 해', meaning: '압력으로 찌꺼기 불어내', vi: 'Thổi áp lực làm sạch ống', pron: 'Hút-kka-xi he' },
+          { id: 32, category: '장비/재료', term: '신나 냄새 조심해', meaning: '희석제 가스 조심해', vi: 'Cẩn thận mùi dung môi', pron: 'Xin-na nem-xe chô-xim-he' },
+          { id: 33, category: '장비/재료', term: '페인트 보관함 정리해', meaning: '', vi: 'Dọn dẹp tủ chứa sơn', pron: 'Phê-in-thư bô-gwan-ham chơng-ni-he' },
+          { id: 34, category: '장비/재료', term: '팁 가이드 확인해', meaning: '건 앞부분 안전 캡 확인해', vi: 'Kiểm tra nắp bảo vệ bép phun', pron: 'Thíp ga-i-đư hwa-gin-he' },
+          { id: 35, category: '장비/재료', term: '팁 가드 확인해', meaning: '건 앞부분 안전 캡 확인해', vi: 'Kiểm tra nắp bảo vệ bép phun', pron: 'Thíp ga-đư hwa-gin-he' },
+          { id: 36, category: '작업/구역', term: '데나 보고와', meaning: '수정 작업 확인하고 와', vi: 'Đi xem tình trạng sửa lỗi rồi về', pron: 'Đê-na bô-gô-wa' },
+          { id: 37, category: '작업/구역', term: '도장 구역 출입 금지해', meaning: '', vi: 'Cấm vào khu vực sơn', pron: 'Đô-chang gu-yớc chu-ríp gưm-chi-he' },
+          { id: 38, category: '작업/구역', term: '정전기 화재 조심해', meaning: '', vi: 'Cẩn thận hỏa hoạn do tĩnh điện', pron: 'Chơng-chơn-gi hwa-che chô-xim-he' },
+          { id: 39, category: '작업/구역', term: '알잘딱해', meaning: '알아서 잘 깔끔하게 해', vi: 'Tự làm cho tốt và gọn gàng vào', pron: 'Al-chal-ttác-he' },
+          { id: 40, category: '작업/구역', term: 'A라인에 있어', meaning: '', vi: 'Ở line A', pron: 'Êi-ra-in-ê ít-xơ' },
+          { id: 41, category: '작업/구역', term: '셀장 들어가', meaning: '블라스팅장 들어가', vi: 'Vào xưởng phun cát (Cell)', pron: 'Xên-chang đư-rơ-ga' },
+          { id: 42, category: '작업/구역', term: '샵 들어가', meaning: '페인트 도장장 들어가', vi: 'Vào xưởng sơn (Shop)', pron: 'Xyáp đư-rơ-ga' },
+          { id: 43, category: '작업/구역', term: '셀타 들어가', meaning: '쉘터 구역 들어가', vi: 'Vào khu vực Shelter', pron: 'Xên-tha đư-rơ-ga' },
+          { id: 44, category: '작업/구역', term: '1번에 있어', meaning: '1번 구역에 있어', vi: 'Ở khu vực số 1', pron: 'Il-bơn-ê ít-xơ' },
+          { id: 45, category: '작업/구역', term: '오버헤드 작업이야 안경써', meaning: '머리 위 작업이니까 보안경 써', vi: 'Làm việc trên đầu nên hãy đeo kính', pron: 'Ô-bơ-hê-đư cha-gơ-bi-ya an-gyơng-xxơ' },
+          { id: 46, category: '작업/구역', term: '물팀 조출했어', meaning: '물청소 팀 일찍 출근했어', vi: 'Đội rửa nước đã đi làm sớm', pron: 'Mun-thim chô-chul-hét-xơ' },
+          { id: 47, category: '작업/구역', term: '물반장한테 물어봐', meaning: '물청소 반장한테 물어봐', vi: 'Hỏi tổ trưởng đội rửa nước xem', pron: 'Mun-ban-chang-han-thê mu-rơ-bwa' }
+        ],
+        '의장부': [
+          { id: 1, category: '배관/연결', term: '밸브 오픈 확인해', meaning: '', vi: 'Kiểm tra mở van', pron: 'Bên-bư ô-phưn hwa-gin-he' },
+          { id: 2, category: '배관/연결', term: '밸브 클로즈 확인해', meaning: '', vi: 'Kiểm tra đóng van', pron: 'Bên-bư khưn-rô-chư hwa-gin-he' },
+          { id: 3, category: '배관/연결', term: '배관 연결 확인해', meaning: '', vi: 'Kiểm tra kết nối đường ống', pron: 'Be-gwan yơn-gyơn hwa-gin-he' },
+          { id: 4, category: '배관/연결', term: '덕트 연결해', meaning: '환기 통로 연결해', vi: 'Kết nối ống thông gió (duct)', pron: 'Đớc-thư yơn-gyơn-he' },
+          { id: 5, category: '배관/연결', term: '소화 배관 설치해', meaning: 'FIRE LINE 설치해', vi: 'Lắp đặt đường ống cứu hỏa', pron: 'Xô-hwa be-gwan xơn-chi-he' },
+          { id: 6, category: '배관/연결', term: '유압 호스 연결해', meaning: '', vi: 'Kết nối ống thủy lực', pron: 'Yu-áp hô-xư yơn-gyơn-he' },
+          { id: 7, category: '배관/연결', term: '파이프 보온해', meaning: '', vi: 'Bọc bảo ôn ống', pron: 'Pha-i-phư bô-ôn-he' },
+          { id: 8, category: '배관/연결', term: '플러싱 해', meaning: '관 내부 청소 해', vi: 'Xả rửa đường ống (Flushing)', pron: 'Phưn-rơ-xing he' },
+          { id: 9, category: '배관/연결', term: '에어 호스 연결해', meaning: '', vi: 'Kết nối ống khí nén', pron: 'E-ơ hô-xư yơn-gyơn-he' },
+          { id: 10, category: '배관/연결', term: '절단 호스 연결해', meaning: '', vi: 'Kết nối ống cắt', pron: 'Chơn-đan hô-xư yơn-gyơn-he' },
+          { id: 11, category: '전장/장비', term: '포설해', meaning: '케이블 인입해', vi: 'Rải cáp (kéo cáp)', pron: 'Phô-xơn-he' },
+          { id: 12, category: '전장/장비', term: '케이블 타이 묶어', meaning: '', vi: 'Buộc dây thít cáp (cable tie)', pron: 'Khê-i-bưn tha-i mu-kkơ' },
+          { id: 13, category: '전장/장비', term: '발전기 확인해', meaning: '', vi: 'Kiểm tra máy phát điện', pron: 'Ban-chơn-gi hwa-gin-he' },
+          { id: 14, category: '전장/장비', term: '외부 전원 연결해', meaning: '', vi: 'Kết nối nguồn điện bên ngoài', pron: 'We-bu chơn-wơn yơn-gyơn-he' },
+          { id: 15, category: '전장/장비', term: '레벨 센서 달아', meaning: '', vi: 'Lắp cảm biến báo mức', pron: 'Rê-bên xen-xơ đa-ra' },
+          { id: 16, category: '전장/장비', term: '전등 켜봐', meaning: '', vi: 'Bật đèn thử xem', pron: 'Chơn-đưng khyơ-bwa' },
+          { id: 17, category: '설치/작업', term: '장비 보호커버 씌우자', meaning: '', vi: 'Hãy bọc vỏ bảo vệ thiết bị', pron: 'Chang-bi bô-hô-khơ-bơ xxi-u-cha' },
+          { id: 18, category: '설치/작업', term: '서포트 위치 확인해', meaning: '', vi: 'Kiểm tra vị trí giá đỡ (support)', pron: 'Xơ-phô-thư wi-chi hwa-gin-he' },
+          { id: 19, category: '설치/작업', term: '그레이팅 깔아', meaning: '발빠짐 방지판 설치하자', vi: 'Lắp tấm lưới thép lót sàn (grating)', pron: 'Gư-rê-i-thing kka-ra' },
+          { id: 20, category: '설치/작업', term: '핸드레일 용접해', meaning: '난간대 용접해', vi: 'Hàn lan can (handrail)', pron: 'Hen-đư-rê-in yông-chớp-he' },
+          { id: 21, category: '설치/작업', term: 'Life Boat 설치해', meaning: '구명정 설치해', vi: 'Lắp đặt xuồng cứu sinh', pron: 'Ra-i-phư bô-thư xơn-chi-he' },
+          { id: 22, category: '설치/작업', term: '끝단 처리해', meaning: '날카롭지 않게 잘 마모해', vi: 'Xử lý phần mép (cạnh)', pron: 'Kkứt-đan chơ-ri-he' },
+          { id: 23, category: '설치/작업', term: '장비 베이스 고정해', meaning: '', vi: 'Cố định đế thiết bị', pron: 'Chang-bi bê-i-xư gô-chơng-he' },
+          { id: 24, category: '설치/작업', term: '유니트 탑재해', meaning: '', vi: 'Cẩu lắp thiết bị (Unit)', pron: 'Yu-ni-thư tháp-che-he' },
+          { id: 25, category: '설치/작업', term: '장비 탑재해', meaning: '', vi: 'Cẩu lắp thiết bị', pron: 'Chang-bi tháp-che-he' },
+          { id: 26, category: '볼팅/체결', term: '볼트 챙겨와', meaning: '', vi: 'Lấy bu lông lại đây', pron: 'Bôn-thư cheng-gyơ-wa' },
+          { id: 27, category: '볼팅/체결', term: '임팩트 가져와', meaning: '', vi: 'Lấy súng bắn bu lông lại đây', pron: 'Im-phéc-thư ga-chyơ-wa' },
+          { id: 28, category: '볼팅/체결', term: '토크 값 확인해', meaning: '볼트 조임 힘 확인해', vi: 'Kiểm tra lực xiết (Torque)', pron: 'Thô-khư gáp hwa-gin-he' },
+          { id: 29, category: '볼팅/체결', term: '볼트 걸어', meaning: '손으로 볼트를 살짝 끼워둬', vi: 'Gá bu lông vào (vặn nhẹ)', pron: 'Bôn-thư gơ-rơ' },
+          { id: 30, category: '볼팅/체결', term: '홀 맞춰', meaning: '볼트 구멍끼리 일치시켜', vi: 'Căn cho khớp lỗ', pron: 'Hôn mát-chwơ' },
+          { id: 31, category: '볼팅/체결', term: '임팩트로 조여', meaning: '최종적으로 볼팅해', vi: 'Xiết bằng súng bắn bu lông', pron: 'Im-phéc-thư-rô chô-yơ' },
+          { id: 32, category: '볼팅/체결', term: '반대편 잡아', meaning: '(볼트 조일 때) 반대쪽 너트가 돌아가지 않게 잡아', vi: 'Giữ chặt phía đối diện', pron: 'Ban-đe-phyơn cha-ba' },
+          { id: 33, category: '볼팅/체결', term: '풀어', meaning: '(볼팅 잘못됐을 때) 다시 풀어', vi: 'Tháo ra', pron: 'Phu-rơ' },
+          { id: 34, category: '도구/자재', term: '구리스 발라', meaning: '윤활제 도포해', vi: 'Bôi mỡ bò (Grease)', pron: 'Gu-ri-xư ban-ra' },
+          { id: 35, category: '도구/자재', term: '테이프 감아', meaning: '', vi: 'Quấn băng keo (băng tan)', pron: 'Thê-i-phư ga-ma' },
+          { id: 36, category: '도구/자재', term: '자재 신청해', meaning: '', vi: 'Đăng ký xin vật tư', pron: 'Cha-che xin-chơng-he' },
+          { id: 37, category: '도구/자재', term: '기명제 실시해', meaning: '이름 작성하자', vi: 'Ghi tên vào dụng cụ', pron: 'Gi-myơng-chê xil-xi-he' },
+          { id: 38, category: '도구/자재', term: '공구 가져와', meaning: '', vi: 'Lấy dụng cụ lại đây', pron: 'Gông-gu ga-chyơ-wa' },
+          { id: 39, category: '도구/자재', term: '공구실 다녀와', meaning: '', vi: 'Đi phòng dụng cụ lấy đồ', pron: 'Gông-gu-xil đa-nyơ-wa' },
+          { id: 40, category: '도구/자재', term: '마킹펜 가져와', meaning: '(체결 완료 후 자주검사 체크표시를 위해)마킹펜 가져와', vi: 'Lấy bút dạ (bút lông) lại đây', pron: 'Ma-khing-phen ga-chyơ-wa' },
+          { id: 41, category: '검사/확인', term: '의장 검사 받아', meaning: '의장품 설치 및 작동 검사 받아', vi: 'Nhận kiểm tra outfitting', pron: 'Ưi-chang gơm-xa ba-đa' },
+          { id: 42, category: '검사/확인', term: '호선 번호 확인해', meaning: '', vi: 'Kiểm tra số hiệu tàu', pron: 'Hô-xơn bơn-hô hwa-gin-he' },
+          { id: 43, category: '검사/확인', term: '이면 확인해', meaning: '뒷면 확인해', vi: 'Kiểm tra mặt sau', pron: 'I-myơn hwa-gin-he' },
+          { id: 44, category: '검사/확인', term: '개정도 확인해', meaning: '변경 도면 확인해', vi: 'Kiểm tra bản vẽ sửa đổi (Revision)', pron: 'Ge-chơng-đô hwa-gin-he' },
+          { id: 45, category: '검사/확인', term: '압력 게이지 확인해', meaning: '', vi: 'Kiểm tra đồng hồ áp suất', pron: 'Áp-ryớc gê-i-chi hwa-gin-he' },
+          { id: 46, category: '검사/확인', term: '유격 봐봐', meaning: '배관사이 간격이 적당한지 확인해', vi: 'Kiểm tra khe hở', pron: 'Yu-gyớc bwa-bwa' },
+          { id: 47, category: '구역/환경', term: '8275호선 들어가', meaning: '0000호선(작업호선) 들어가', vi: 'Vào tàu số 0000', pron: 'Gông-gông-gông-gông hô-xơn đư-rơ-ga' },
+          { id: 48, category: '구역/환경', term: '엔진룸 이동해', meaning: '', vi: 'Di chuyển đến buồng máy', pron: 'Ên-chin-rum i-đông-he' },
+          { id: 49, category: '구역/환경', term: '작업 자리 청소해', meaning: '', vi: 'Dọn dẹp chỗ làm việc', pron: 'Cha-gớp cha-ri chơng-xô-he' },
+          { id: 50, category: '작업/기타', term: 'LUG를 공기구를 이용해서 잘라', meaning: '', vi: 'Cắt móc cẩu bằng dụng cụ khí nén', pron: 'Rơ-gư-rưn gông-gi-gu-rô i-yông-he-xơ chal-ra' },
+          { id: 51, category: '작업/기타', term: '야간 작업 교대해', meaning: '', vi: 'Bàn giao ca làm đêm', pron: 'Ya-gan cha-gớp gyô-đe-he' },
+          { id: 52, category: '작업/기타', term: '조금만 들어봐', meaning: '', vi: 'Nâng lên một chút xem', pron: 'Chô-gưm-man đư-rơ-bwa' },
+          { id: 53, category: '작업/기타', term: '불받이 설치해', meaning: '(용접 작업 준비 시)불받이 설치해', vi: 'Căng bạt chống cháy', pron: 'Bul-ba-chi xơn-chi-he' }
+        ],
+        '건조부': [
+          { id: 1, category: '탑재/조립', term: '블록 탑재해', meaning: '', vi: 'Cẩu lắp block lên tàu', pron: 'Bư-lốc tháp-che-he' },
+          { id: 2, category: '탑재/조립', term: '반목 확인해', meaning: '', vi: 'Kiểm tra bệ đỡ block', pron: 'Ban-mốc hwa-gin-he' },
+          { id: 3, category: '탑재/조립', term: '도크 이동해', meaning: '', vi: 'Di chuyển đến Dock', pron: 'Đô-khư i-đông-he' },
+          { id: 4, category: '탑재/조립', term: '수평 맞춰', meaning: '선체 수평 맞춰', vi: 'Căn bằng (chỉnh thăng bằng)', pron: 'Xu-phyơng mát-chwơ' },
+          { id: 5, category: '검사/테스트', term: '탱크 테스트 해', meaning: '', vi: 'Kiểm tra (test) hầm chứa', pron: 'Theng-khư thê-xư-thư he' },
+          { id: 6, category: '탑재/조립', term: '족장 설치 상태 확인해', meaning: '발판 설치 확인해', vi: 'Kiểm tra tình trạng lắp giàn giáo', pron: 'Chốc-chang xơn-chi xang-thê hwa-gin-he' },
+          { id: 7, category: '탑재/조립', term: '취부 작업 시작해', meaning: '', vi: 'Bắt đầu công việc lắp ráp', pron: 'Chwi-bu cha-gớp xi-chác-he' },
+          { id: 8, category: '정리/청소', term: '어퍼데크 청소해', meaning: '', vi: 'Dọn dẹp boong trên cùng (Upper deck)', pron: 'Ơ-phơ-đê-khư chơng-xô-he' },
+          { id: 9, category: '정리/청소', term: '마이존 구역 청소해', meaning: '', vi: 'Dọn dẹp khu vực làm việc của mình', pron: 'Ma-i-chôn gu-yớc chơng-xô-he' },
+          { id: 10, category: '탑재/조립', term: '블럭간 갭상태 확인해', meaning: '블록 간격 측정해', vi: 'Kiểm tra khe hở giữa các block', pron: 'Bư-lớc-gan gép-xang-thê hwa-gin-he' },
+          { id: 11, category: '크레인/장비', term: '크레인 신호 확인해', meaning: '', vi: 'Kiểm tra tín hiệu cẩu', pron: 'Khư-rê-in xin-hô hwa-gin-he' },
+          { id: 12, category: '탑재/조립', term: '유압 잭 높이 맞춰', meaning: '', vi: 'Căn chỉnh độ cao kích thủy lực', pron: 'Yu-áp chéc nô-phi mát-chwơ' },
+          { id: 13, category: '작업/이동', term: '본선 승선해', meaning: '', vi: 'Lên tàu', pron: 'Bôn-xơn xưng-xơn-he' },
+          { id: 14, category: '안전/설비', term: '사다리 고정해', meaning: '', vi: 'Cố định thang chắc chắn', pron: 'Xa-đa-ri gô-chơng-he' },
+          { id: 15, category: '탑재/조립', term: '로드아웃 준비해', meaning: '진수 준비해', vi: 'Chuẩn bị hạ thủy (Load-out)', pron: 'Rô-đư-a-út chun-bi-he' },
+          { id: 16, category: '정리/청소', term: '탱크 내부 청소해', meaning: '', vi: 'Dọn dẹp bên trong hầm chứa', pron: 'Theng-khư ne-bu chơng-xô-he' },
+          { id: 17, category: '검사/용접', term: '화기작업 이면 확인해', meaning: '', vi: 'Kiểm tra mặt sau khi hàn/khò', pron: 'Hwa-gi-cha-gớp i-myơn hwa-gin-he' },
+          { id: 18, category: '도면/확인', term: '도면 가져와', meaning: '', vi: 'Lấy bản vẽ lại đây', pron: 'Đô-myơn ga-chyơ-wa' },
+          { id: 19, category: '탑재/조립', term: '선미에서 선수쪽으로 작업해', meaning: '', vi: 'Làm việc từ lái tàu lên mũi tàu', pron: 'Xơn-mi-ê-xơ xơn-xu-chốc-ư-rô cha-gớp-he' },
+          { id: 20, category: '탑재/조립', term: '선수에서 선미쪽으로 작업해', meaning: '', vi: 'Làm việc từ mũi tàu xuống lái tàu', pron: 'Xơn-xu-ê-xơ xơn-mi-chốc-ư-rô cha-gớp-he' },
+          { id: 21, category: '탑재/조립', term: '중앙부 확인 후 작업해', meaning: '', vi: 'Làm việc sau khi kiểm tra phần giữa', pron: 'Chung-ang-bu hwa-gin hu cha-gớp-he' },
+          { id: 22, category: '탑재/조립', term: '버쓰 바닥 마킹해', meaning: '', vi: 'Đánh dấu trên sàn Berth', pron: 'Bơ-xxư ba-đác ma-khing-he' },
+          { id: 23, category: '안전/보호구', term: '고소작업 벨트 채워', meaning: '', vi: 'Thắt dây an toàn khi làm việc trên cao', pron: 'Gô-xô-cha-gớp bên-thư che-wơ' },
+          { id: 24, category: '탑재/조립', term: '족장 해체해', meaning: '발판 해체해', vi: 'Tháo dỡ giàn giáo', pron: 'Chốc-chang he-chê-he' },
+          { id: 25, category: '작업/환경', term: '환기팬 설치 후 작업해', meaning: '', vi: 'Làm việc sau khi lắp quạt thông gió', pron: 'Hwan-gi-phen xơn-chi hu cha-gớp-he' },
+          { id: 26, category: '크레인/장비', term: '크레인 신호수 불러와', meaning: '', vi: 'Gọi người đánh tín hiệu cẩu lại đây', pron: 'Khư-rê-in xin-hô-xu bun-rơ-wa' },
+          { id: 27, category: '안전/수칙', term: '낙하물 주의해', meaning: '', vi: 'Chú ý vật rơi từ trên xuống', pron: 'Nác-ha-mun chu-ưi-he' },
+          { id: 28, category: '정리/청소', term: '시마이해', meaning: '일 마무리해', vi: 'Kết thúc công việc', pron: 'Xi-mai-he' },
+          { id: 29, category: '작업/이동', term: '족장 상부 건조 작업해', meaning: '', vi: 'Làm việc ở phía trên giàn giáo', pron: 'Chốc-chang xang-bu gơn-chô cha-gớp-he' },
+          { id: 30, category: '수정/사상', term: '선체 외부 사상해', meaning: '선체 외부 그라인딩 해', vi: 'Mài nhẵn mặt ngoài vỏ tàu', pron: 'Xơn-chê we-bu xa-xang-he' },
+          { id: 31, category: '정리/청소', term: '용접기 정리정돈해', meaning: '', vi: 'Sắp xếp gọn gàng máy hàn', pron: 'Yông-chớp-gi chơng-ri-chơng-đôn-he' },
+          { id: 32, category: '전장/설비', term: '본선 조명 설치해', meaning: '', vi: 'Lắp đặt đèn chiếu sáng trên tàu', pron: 'Bôn-xơn chô-myơng xơn-chi-he' },
+          { id: 33, category: '안전/설비', term: '탱크 맨홀 잠궈', meaning: '탱크 맨홀 잠금장치 해', vi: 'Khóa nắp hầm (manhole) lại', pron: 'Theng-khư men-hôn cham-gwơ' },
+          { id: 34, category: '작업/환경', term: '탱크 배수해', meaning: '', vi: 'Xả nước trong hầm', pron: 'Theng-khư be-xu-he' },
+          { id: 35, category: '통신/보고', term: '무전기 통신해', meaning: '', vi: 'Liên lạc bằng bộ đàm', pron: 'Mu-chơn-gi thông-xin-he' },
+          { id: 36, category: '안전/수칙', term: '작업장 내 금연해', meaning: '', vi: 'Cấm hút thuốc trong nơi làm việc', pron: 'Cha-gớp-chang ne gưm-yơn-he' },
+          { id: 37, category: '작업/주의', term: '페인트 데미지 주의해', meaning: '', vi: 'Chú ý đừng làm xước sơn', pron: 'Phê-in-thư đê-mi-chi chu-ưi-he' },
+          { id: 38, category: '통신/보고', term: '야간 작업자 기록해', meaning: '', vi: 'Ghi chép danh sách người làm đêm', pron: 'Ya-gan cha-gớp-cha gi-rốc-he' },
+          { id: 39, category: '크레인/장비', term: '달줄 이용해서 장비 이동해', meaning: '', vi: 'Di chuyển thiết bị bằng dây cẩu', pron: 'Dal-chul i-yông-he-xơ chang-bi i-đông-he' },
+          { id: 40, category: '통신/보고', term: '작업 블록 기록해', meaning: '', vi: 'Ghi chép block đã làm', pron: 'Cha-gớp bư-lốc gi-rốc-he' },
+          { id: 41, category: '검사/테스트', term: '탱크 에어 테스트 해', meaning: '', vi: 'Thử áp lực khí cho hầm', pron: 'Theng-khư e-ơ thê-xư-thư he' },
+          { id: 42, category: '안전/설비', term: '엘리베이터 점검해', meaning: '', vi: 'Kiểm tra thang máy', pron: 'Ên-ri-bê-i-thơ chơm-gơm-he' },
+          { id: 43, category: '수정/사상', term: '용접 부위 녹 제거해', meaning: '', vi: 'Loại bỏ gỉ sét ở phần hàn', pron: 'Yông-chớp bu-wi nốc chê-gơ-he' },
+          { id: 44, category: '안전/수칙', term: '안전 점검해', meaning: '', vi: 'Kiểm tra an toàn', pron: 'An-chơn chơm-gơm-he' },
+          { id: 45, category: '작업/주의', term: '프로펠러 보호해', meaning: '', vi: 'Bảo vệ chân vịt (propeller)', pron: 'Phư-rô-phel-rơ bô-hô-he' },
+          { id: 46, category: '안전/수칙', term: '지게차 조심해', meaning: '', vi: 'Cẩn thận xe nâng', pron: 'Chi-ge-cha chô-xim-he' },
+          { id: 47, category: '통신/보고', term: '작업 완료 보고해', meaning: '', vi: 'Báo cáo hoàn thành công việc', pron: 'Cha-gớp wal-ryô bô-gô-he' },
+          { id: 48, category: '정리/청소', term: '작업 끝나면 청소해', meaning: '', vi: 'Làm xong thì dọn vệ sinh', pron: 'Cha-gớp kkứt-na-myơn chơng-xô-he' },
+          { id: 49, category: '안전/수칙', term: '미끄럼 주의해', meaning: '', vi: 'Chú ý trơn trượt', pron: 'Mi-kkư-rơm chu-ưi-he' },
+          { id: 50, category: '안전/설비', term: '이탈방지 와이어 설치해', meaning: '', vi: 'Lắp dây cáp chống rơi/tuột', pron: 'I-thal-bang-chi wa-i-ơ xơn-chi-he' },
+          { id: 51, category: '용접/작업', term: '피스 라운드 용접해', meaning: '', vi: 'Hàn bo tròn miếng gá (piece)', pron: 'Phi-xư ra-un-đư yông-chớp-he' },
+          { id: 52, category: '용접/작업', term: '그라인딩 후 피스 용접해', meaning: '', vi: 'Mài nhẵn rồi mới hàn miếng gá', pron: 'Gư-ra-in-đing hu phi-xư yông-chớp-he' },
+          { id: 53, category: '정리/청소', term: '호스류 정리정돈해', meaning: '', vi: 'Sắp xếp gọn gàng các loại ống/dây', pron: 'Hô-xư-ryu chơng-ri-chơng-đôn-he' },
+          { id: 54, category: '안전/보호구', term: '개인장비 점검해', meaning: '', vi: 'Kiểm tra trang thiết bị cá nhân', pron: 'Ge-in-chang-bi chơm-gơm-he' },
+          { id: 55, category: '정리/청소', term: '5S 점검해', meaning: '툴박스 정리정돈하고 청소해', vi: 'Kiểm tra 5S (Sàng lọc, sắp xếp...)', pron: 'Ô-ê-xư chơm-gơm-he' },
+          { id: 56, category: '안전/수칙', term: '화재위험에 대비해', meaning: '', vi: 'Đề phòng nguy cơ hỏa hoạn', pron: 'Hwa-che-wi-hơm-ê đê-bi-he' },
+          { id: 57, category: '안전/수칙', term: '이동시 주의확인', meaning: '', vi: 'Chú ý quan sát khi di chuyển', pron: 'I-đông xi chu-ưi-hwa-gin' },
+          { id: 58, category: '안전/수칙', term: '블록 밑으로 이동 주의해', meaning: '', vi: 'Chú ý khi đi dưới block', pron: 'Bư-lốc mit-thư-rô i-đông chu-ưi-he' },
+          { id: 59, category: '정리/청소', term: '마이존 청소해', meaning: '', vi: 'Dọn dẹp khu vực làm việc của mình', pron: 'Ma-i-chôn chơng-xô-he' },
+          { id: 60, category: '안전/수칙', term: '3타점 준수해', meaning: '사다리 탈 때 세 곳 지지해', vi: 'Tuân thủ quy tắc ba điểm tựa', pron: 'Xam-tha-chơm chun-xu-he' },
+          { id: 61, category: '안전/수칙', term: '뒷걸음질 금지해', meaning: '', vi: 'Cấm đi lùi', pron: 'Dwít-gơ-rưm-chil gưm-chi-he' },
+          { id: 62, category: '크레인/장비', term: '자재 탑재해', meaning: '', vi: 'Cẩu vật tư lên tàu', pron: 'Cha-che tháp-che-he' },
+          { id: 63, category: '안전/보호구', term: '보호구 착용해', meaning: '', vi: 'Đeo đồ bảo hộ vào', pron: 'Bô-hô-gu chắc-yong-he' },
+          { id: 64, category: '통신/보고', term: 'TBM 전산 등록해', meaning: 'TBM(Tool Box Meeting) 전산 등록 해', vi: 'Đăng ký TBM lên hệ thống', pron: 'Thi-bi-em chơn-xan đưng-nốc-he' },
+          { id: 65, category: '통신/보고', term: '작업지시 전산 확인해', meaning: '', vi: 'Kiểm tra chỉ thị làm việc trên hệ thống', pron: 'Cha-gớp-chi-xi chơn-xan hwa-gin-he' },
+          { id: 66, category: '안전/보호구', term: '안전모 착용해', meaning: '', vi: 'Đội mũ an toàn vào', pron: 'An-chơn-mô chắc-yong-he' },
+          { id: 67, category: '안전/보호구', term: '안전벨트 체결해', meaning: '', vi: 'Thắt dây an toàn', pron: 'An-chơn-bên-thư chê-gyơn-he' },
+          { id: 68, category: '안전/보호구', term: '보안경 착용해', meaning: '', vi: 'Đeo kính bảo hộ vào', pron: 'Bô-an-gyơng chắc-yong-he' },
+          { id: 69, category: '안전/보호구', term: '귀마개 착용해', meaning: '', vi: 'Đeo nút bịt tai vào', pron: 'Gwi-ma-ge chắc-yong-he' },
+          { id: 70, category: '안전/수칙', term: '발판 조심해', meaning: '', vi: 'Cẩn thận giàn giáo/mâm giáo', pron: 'Bal-phan chô-xim-he' },
+          { id: 71, category: '탑재/조립', term: '서포트 설치해', meaning: '', vi: 'Lắp giá đỡ (support)', pron: 'Xơ-phô-thư xơn-chi-he' },
+          { id: 72, category: '안전/수칙', term: '낙하물 조심해', meaning: '', vi: 'Cẩn thận vật rơi', pron: 'Nác-ha-mun chô-xim-he' },
+          { id: 73, category: '안전/수칙', term: '추락 조심해', meaning: '', vi: 'Cẩn thận rơi ngã', pron: 'Chu-rác chô-xim-he' },
+          { id: 74, category: '안전/수칙', term: '난간을 잡아', meaning: '핸드레일 잡아', vi: 'Hãy bám vào lan can', pron: 'Nan-gan-ưn cha-ba' },
+          { id: 75, category: '작업/이동', term: '사다리 올라가', meaning: '', vi: 'Trèo lên thang', pron: 'Xa-đa-ri ôn-ra-ga' },
+          { id: 76, category: '안전/수칙', term: '맨홀 주의해', meaning: '', vi: 'Cẩn thận lỗ hầm (manhole)', pron: 'Men-hôn chu-ưi-he' },
+          { id: 77, category: '안전/수칙', term: 'TMH 주의해', meaning: 'TMH(Temporary Man Hole) 주의해', vi: 'Cẩn thận lỗ hầm tạm (TMH)', pron: 'Thi-êm-ê-i-chi chu-ưi-he' }
+        ],
+        '선실생산부': [
+          { id: 1, category: '인테리어/마감', term: '천장 실링 판넬 설치해', meaning: '', vi: 'Lắp tấm trần (Panel trần)', pron: 'Chơn-chang xil-ring phan-nên xơn-chi-he' },
+          { id: 2, category: '인테리어/마감', term: '바닥 타일 작업해', meaning: '', vi: 'Lát gạch nền', pron: 'Ba-đác tha-in cha-gớp-he' },
+          { id: 3, category: '인테리어/마감', term: '벽 수평 확인해', meaning: '', vi: 'Kiểm tra độ phẳng của tường', pron: 'Byớc xu-phyơng hwa-gin-he' },
+          { id: 4, category: '인테리어/마감', term: '몰딩 마감해', meaning: '', vi: 'Hoàn thiện phào chỉ (molding)', pron: 'Môn-đing ma-gam-he' },
+          { id: 5, category: '인테리어/마감', term: '보온재 채워 넣어', meaning: '', vi: 'Nhét vật liệu cách nhiệt vào', pron: 'Bô-ôn-che che-wơ nơ-ơ' },
+          { id: 6, category: '인테리어/마감', term: '카페트 설치해', meaning: '', vi: 'Trải thảm', pron: 'Kha-phê-thư xơn-chi-he' },
+          { id: 7, category: '인테리어/마감', term: '창틀 마감해', meaning: '', vi: 'Hoàn thiện khung cửa sổ', pron: 'Chang-thưn ma-gam-he' },
+          { id: 8, category: '가구/설치', term: '가구 고정해', meaning: '', vi: 'Cố định đồ nội thất', pron: 'Ga-gu gô-chơng-he' },
+          { id: 9, category: '가구/설치', term: '문손잡이 달아', meaning: '', vi: 'Lắp tay nắm cửa', pron: 'Mun-xôn-cha-bi đa-ra' },
+          { id: 10, category: '가구/설치', term: '커튼 레일 달아', meaning: '', vi: 'Lắp thanh treo rèm', pron: 'Khơ-thưn rê-in đa-ra' },
+          { id: 11, category: '가구/설치', term: '유닛 설치해', meaning: '', vi: 'Lắp đặt nhà vệ sinh đúc sẵn (Unit)', pron: 'Yu-nít xơn-chi-he' },
+          { id: 12, category: '가구/설치', term: '도어 스토퍼 달아', meaning: '', vi: 'Lắp cục chặn cửa', pron: 'Đô-ơ xư-thô-phơ đa-ra' },
+          { id: 13, category: '가구/설치', term: '매트리스 가져와', meaning: '', vi: 'Lấy nệm lại đây', pron: 'Me-thư-ri-xư ga-chyơ-wa' },
+          { id: 14, category: '가구/설치', term: '문 수평 조절해', meaning: '', vi: 'Căn chỉnh cửa sổ / cửa ra vào', pron: 'Mun xu-phyơng chô-chơn-he' },
+          { id: 15, category: '가구/설치', term: '행거 다시 붙여', meaning: '', vi: 'Gắn lại giá treo quần áo', pron: 'Heng-gơ đa-xi bu-chyơ' },
+          { id: 16, category: '가구/설치', term: '냉장고 수평 잡아', meaning: '', vi: 'Căn bằng tủ lạnh', pron: 'Neng-chang-gô xu-phyơng cha-ba' },
+          { id: 17, category: '가구/설치', term: '티비 선반 붙여', meaning: '', vi: 'Lắp kệ TV', pron: 'Thi-bi xơn-ban bu-chyơ' },
+          { id: 18, category: '가구/설치', term: '서랍 열어봐', meaning: '', vi: 'Mở ngăn kéo ra xem', pron: 'Xơ-ráp yơ-rơ-bwa' },
+          { id: 19, category: '가구/설치', term: '가구 입고 확인해', meaning: '', vi: 'Kiểm tra đồ nội thất nhập vào', pron: 'Ga-gu ip-gô hwa-gin-he' },
+          { id: 20, category: '실리콘/도구', term: '실리콘 작업해', meaning: '', vi: 'Bắn silicon', pron: 'Xil-ri-khôn cha-gớp-he' },
+          { id: 21, category: '실리콘/도구', term: '실란트 작업해', meaning: '', vi: 'Bắn keo trám trét (sealant)', pron: 'Xil-ran-thư cha-gớp-he' },
+          { id: 22, category: '실리콘/도구', term: '실리콘 헤라 가져와', meaning: '', vi: 'Lấy cái vuốt keo silicon lại đây', pron: 'Xil-ri-khôn hê-ra ga-chyơ-wa' },
+          { id: 23, category: '실리콘/도구', term: '인테리어 공구 챙겨', meaning: '', vi: 'Chuẩn bị dụng cụ làm nội thất', pron: 'In-thê-ri-ơ gông-gu cheng-gyơ' },
+          { id: 24, category: '전기/설비', term: '스위치 눌러봐', meaning: '', vi: 'Bấm công tắc thử xem', pron: 'Xư-wi-chi nun-rơ-bwa' },
+          { id: 25, category: '전기/설비', term: '냉방 확인해', meaning: '', vi: 'Kiểm tra điều hòa (máy lạnh)', pron: 'Neng-bang hwa-gin-he' },
+          { id: 26, category: '전기/설비', term: '변기 물 내려봐', meaning: '', vi: 'Thử xả nước bồn cầu', pron: 'Byơn-gi mun ne-ryơ-bwa' },
+          { id: 27, category: '전기/설비', term: '선실 온도 확인해', meaning: '', vi: 'Kiểm tra nhiệt độ phòng (cabin)', pron: 'Xơn-xil ôn-đô hwa-gin-he' },
+          { id: 28, category: '전기/설비', term: '비상벨 눌러봐', meaning: '', vi: 'Bấm chuông khẩn cấp thử xem', pron: 'Bi-xang-bên nun-rơ-bwa' },
+          { id: 29, category: '전기/설비', term: '환풍기 소리 들어봐', meaning: '', vi: 'Nghe thử tiếng quạt thông gió', pron: 'Hwan-phung-gi xô-ri đư-rơ-bwa' },
+          { id: 30, category: '전기/설비', term: '콘센트 전기 확인해', meaning: '', vi: 'Kiểm tra điện ở ổ cắm', pron: 'Khôn-xen-thư chơn-gi hwa-gin-he' },
+          { id: 31, category: '청소/보양', term: '가빠 깔아', meaning: '포장지 설치해', vi: 'Trải bạt bảo vệ sàn', pron: 'Gáp-pa kka-ra' },
+          { id: 32, category: '청소/보양', term: '방 청소해', meaning: '', vi: 'Dọn dẹp phòng', pron: 'Bang chơng-xô-he' },
+          { id: 33, category: '청소/보양', term: '나무 조각 치워', meaning: '', vi: 'Dọn các mảnh gỗ vụn', pron: 'Na-mu chô-gác chi-wơ' },
+          { id: 34, category: '청소/보양', term: '거울 깨끗이 닦아', meaning: '', vi: 'Lau sạch gương', pron: 'Gơ-un kke-kkư-xi đa-kka' },
+          { id: 35, category: '청소/보양', term: '복도 같이 청소해', meaning: '', vi: 'Dọn luôn cả hành lang', pron: 'Bốc-đô ga-chi chơng-xô-he' },
+          { id: 36, category: '청소/보양', term: '가구 보호 스티커 붙여', meaning: '', vi: 'Dán miếng dán bảo vệ nội thất', pron: 'Ga-gu bô-hô xư-thi-khơ bu-chyơ' },
+          { id: 37, category: '청소/보양', term: '승강기 안 청소해', meaning: '', vi: 'Dọn bên trong thang máy', pron: 'Xưng-gang-gi an chơng-xô-he' },
+          { id: 38, category: '규정/생활', term: '선내 음식 섭취 안돼', meaning: '', vi: 'Không được ăn uống trên tàu', pron: 'Xơn-ne ưm-xíc xớp-chwi an-đwe' },
+          { id: 39, category: '규정/생활', term: '신발 벗고 들어와', meaning: '', vi: 'Cởi giày ra rồi vào', pron: 'Xin-ban bớt-gô đư-rơ-wa' },
+          { id: 40, category: '규정/생활', term: '가구 조심해', meaning: '', vi: 'Cẩn thận đồ nội thất', pron: 'Ga-gu chô-xim-he' },
+          { id: 41, category: '규정/생활', term: '방문 열쇠로 잠가', meaning: '', vi: 'Khóa cửa phòng lại', pron: 'Bang-mun yơn-xwe-rô cham-ga' },
+          { id: 42, category: '규정/생활', term: '선실 화기 금지해', meaning: '', vi: 'Cấm lửa trong phòng (cabin)', pron: 'Xơn-xil hwa-gi gưm-chi-he' },
+          { id: 43, category: '규정/생활', term: '깨끗한 신발 신어', meaning: '', vi: 'Đi giày sạch vào', pron: 'Kke-kkứt-han xin-ban xi-nơ' },
+          { id: 44, category: '규정/생활', term: '출입증 확인해', meaning: '', vi: 'Kiểm tra thẻ ra vào', pron: 'Chu-ríp-chưng hwa-gin-he' },
+          { id: 45, category: '기타/검사', term: '선실 도면 봐', meaning: '', vi: 'Xem bản vẽ phòng (cabin)', pron: 'Xơn-xil đô-myơn bwa' },
+          { id: 46, category: '기타/검사', term: '선실 검사 준비해', meaning: '', vi: 'Chuẩn bị kiểm tra phòng', pron: 'Xơn-xil gơm-xa chun-bi-he' },
+          { id: 47, category: '기타/검사', term: '작업 일지 써', meaning: '', vi: 'Viết nhật ký công việc', pron: 'Cha-gớp il-chi xxơ' },
+          { id: 48, category: '기타/검사', term: '발판 조심해', meaning: '', vi: 'Cẩn thận giàn giáo', pron: 'Bal-phan chô-xim-he' },
+          { id: 49, category: '기타/검사', term: '사다리 조심해', meaning: '', vi: 'Cẩn thận thang', pron: 'Xa-đa-ri chô-xim-he' },
+          { id: 50, category: '기타/검사', term: '서포트 설치해', meaning: '', vi: 'Lắp giá đỡ (support)', pron: 'Xơ-phô-thư xơn-chi-he' }
+        ],
+        '선박커미셔닝부': [
+          { id: 1, category: '전기/전원', term: '파워 올려', meaning: '판넬 및 장비 전원 켜', vi: 'Bật nguồn (Bật aptomat)', pron: 'Pha-wơ ôn-lyơ' },
+          { id: 2, category: '전기/전원', term: '파워 꺼', meaning: '판넬 및 장비 전원 꺼', vi: 'Tắt nguồn (Tắt aptomat)', pron: 'Pha-wơ kkơ' },
+          { id: 3, category: '전기/전원', term: '전원 오프 (off)', meaning: '', vi: 'Tắt nguồn', pron: 'Chơn-wơn ô-phư' },
+          { id: 4, category: '전기/전원', term: '쇼파워 체인지 해', meaning: '발전기 전원에서 안벽전원으로 변경해', vi: 'Đổi sang nguồn điện trên bờ', pron: 'Xyô-pha-wơ chê-in-chi he' },
+          { id: 5, category: '전기/전원', term: '파워 박치기 조심해', meaning: '전원 충돌 조심해', vi: 'Cẩn thận chập điện (xung đột nguồn)', pron: 'Pha-wơ bác-chi-gi chô-xim-he' },
+          { id: 6, category: '전기/전원', term: '주방 판넬 전원 투입해', meaning: '', vi: 'Bật nguồn bảng điện nhà bếp', pron: 'Chu-bang phan-nên chơn-wơn thu-íp-he' },
+          { id: 7, category: '전기/전원', term: '감전 조심해', meaning: '', vi: 'Cẩn thận điện giật', pron: 'Gam-chơn chô-xim-he' },
+          { id: 8, category: '전기/계측', term: '테스터기 찍어봐', meaning: '멀티테스터기로 전류,전압 측정해', vi: 'Dùng đồng hồ đo điện kiểm tra thử', pron: 'Thê-xư-thơ-gi cci-gơ-bwa' },
+          { id: 9, category: '전기/계측', term: '메가 확인해', meaning: '케이블 및 장비 절연상태 점검해', vi: 'Kiểm tra điện trở cách điện', pron: 'Mê-ga hwa-gin-he' },
+          { id: 10, category: '전기/계측', term: '접지 잡아봐', meaning: 'Cable을 Hull과 Grounding해', vi: 'Nối tiếp địa (Grounding) thử xem', pron: 'Chớp-chi cha-ba-bwa' },
+          { id: 11, category: '전기/계측', term: '라인 체크해', meaning: '케이블 라인 체크해', vi: 'Kiểm tra đường dây kết nối', pron: 'Ra-in chê-khư-he' },
+          { id: 12, category: '전기/계측', term: '케이블 떼', meaning: '', vi: 'Tháo cáp ra', pron: 'Khê-i-bưn tte' },
+          { id: 13, category: '전기/계측', term: '케이블 다시 붙여', meaning: '', vi: 'Gắn cáp lại', pron: 'Khê-i-bưn đa-xi bu-chyơ' },
+          { id: 14, category: '전기/계측', term: '접프 잡아', meaning: 'Cable 과 Cable 사이를 연결해', vi: 'Nối dây ghim (Jumper)', pron: 'Chớp-phư cha-ba' },
+          { id: 15, category: '알람/제어', term: '알람 울리나 봐', meaning: '', vi: 'Xem còi báo động có kêu không', pron: 'Al-ram un-ri-na bwa' },
+          { id: 16, category: '알람/제어', term: 'AMS 봐', meaning: 'AMS(Alarm monitoring System) 확인해', vi: 'Nhìn màn hình báo động trung tâm (AMS)', pron: 'Êi-êm-ê-xư bwa' },
+          { id: 17, category: '알람/제어', term: '알람 내', meaning: '알람 발생 시켜', vi: 'Kích hoạt báo động', pron: 'Al-ram ne' },
+          { id: 18, category: '알람/제어', term: '알람 리셋', meaning: '알람 리셋 시켜', vi: 'Cài đặt lại báo động (Reset)', pron: 'Al-ram ri-xét' },
+          { id: 19, category: '알람/제어', term: '디지 알람 띄워', meaning: '발전기 알람 발생시켜', vi: 'Kích hoạt báo động máy phát điện khẩn cấp', pron: 'Đi-chi al-ram tti-wơ' },
+          { id: 20, category: '알람/제어', term: '알람 좀 잡아라', meaning: '알람 소리 꺼', vi: 'Tắt âm báo động đi', pron: 'Al-ram chôm cha-ba-ra' },
+          { id: 21, category: '알람/제어', term: '알람 얼마냐?', meaning: '모니터에서 알람 세팅 값을 확인해라', vi: 'Chỉ số báo động là bao nhiêu?', pron: 'Al-ram ơm-ma-nya' },
+          { id: 22, category: '알람/제어', term: 'IO 리스트 확인해', meaning: '도면의 IO 와 AMS IO 신호가 맞는지 확인해', vi: 'Kiểm tra danh sách tín hiệu (I/O)', pron: 'A-i-ô ri-xư-thư hwa-gin-he' },
+          { id: 23, category: '시운전/기계', term: '점검하러 가', meaning: '', vi: 'Đi kiểm tra', pron: 'Chơm-gơm-ha-rơ ga' },
+          { id: 24, category: '시운전/기계', term: '비상 발전기 돌려', meaning: '', vi: 'Bật máy phát điện khẩn cấp', pron: 'Bi-xang ban-chơn-gi đôn-ryơ' },
+          { id: 25, category: '시운전/기계', term: '펌프 가동해봐', meaning: '', vi: 'Chạy thử máy bơm xem', pron: 'Phơm-phư ga-đông-he-bwa' },
+          { id: 26, category: '시운전/기계', term: '모터 방향 점검해', meaning: '모터 도는 방향 봐', vi: 'Kiểm tra hướng quay của động cơ', pron: 'Mô-thơ bang-hyang chơm-gơm-he' },
+          { id: 27, category: '시운전/기계', term: '스타트 푸쉬', meaning: '펌프 스타트 버튼 눌러', vi: 'Bấm nút Khởi động (Start)', pron: 'Xư-tha-thư phu-xwi' },
+          { id: 28, category: '시운전/기계', term: '스탑 푸쉬', meaning: '펌프 스탑 버튼 눌러', vi: 'Bấm nút Dừng (Stop)', pron: 'Xư-tháp phu-xwi' },
+          { id: 29, category: '시운전/기계', term: '이머전시 스탑 푸쉬', meaning: '이머전시 스탑 버튼 눌러', vi: 'Bấm nút Dừng khẩn cấp', pron: 'I-mơ-chơn-xi xư-tháp phu-xwi' },
+          { id: 30, category: '시운전/기계', term: '이머전시 스탑 리셋', meaning: '이머전시 스탑 리셋 시켜', vi: 'Đặt lại nút Dừng khẩn cấp', pron: 'I-mơ-chơn-xi xư-tháp ri-xét' },
+          { id: 31, category: '시운전/기계', term: '조타 장치 확인해', meaning: '', vi: 'Kiểm tra thiết bị lái (bánh lái)', pron: 'Chô-tha chang-chi hwa-gin-he' },
+          { id: 32, category: '시운전/기계', term: '인터락 유지해', meaning: '', vi: 'Duy trì trạng thái khóa liên động (Interlock)', pron: 'In-thơ-rác yu-chi-he' },
+          { id: 33, category: '테스트/측정', term: '템프 체크해', meaning: '온도센서 점검해', vi: 'Kiểm tra nhiệt độ', pron: 'Thêm-phư chê-khư-he' },
+          { id: 34, category: '테스트/측정', term: '템프 걸어', meaning: '테스트 장비로 장비에 온도값 입력해', vi: 'Tác động nhiệt độ thử', pron: 'Thêm-phư gơ-rơ' },
+          { id: 35, category: '테스트/측정', term: '프레셔 걸어', meaning: '테스트 장비로 장비에 압력 인가해', vi: 'Kích áp suất để thử', pron: 'Phư-rê-xyơ gơ-rơ' },
+          { id: 36, category: '테스트/측정', term: '레벨 땡겨', meaning: '레벨스위치 테스트 콕 올려', vi: 'Kéo cảm biến mức nước', pron: 'Rê-bên tteng-gyơ' },
+          { id: 37, category: '테스트/측정', term: '센서 수치 읽어', meaning: '', vi: 'Đọc chỉ số cảm biến', pron: 'Xen-xơ xu-chi il-gơ' },
+          { id: 38, category: '테스트/측정', term: '리크 있나 확인해', meaning: '누설 있는지 확인해', vi: 'Kiểm tra xem có rò rỉ không', pron: 'Ri-khư it-na hwa-gin-he' },
+          { id: 39, category: '테스트/측정', term: '진동 측정해', meaning: '', vi: 'Đo độ rung', pron: 'Chin-đông chưc-chơng-he' },
+          { id: 40, category: '테스트/측정', term: '블랙아웃 테스트해', meaning: '', vi: 'Thử nghiệm phục hồi mất điện', pron: 'Bư-léc-a-út thê-xư-thư-he' },
+          { id: 41, category: '테스트/측정', term: '스팀 배관 확인해', meaning: '', vi: 'Kiểm tra đường ống hơi nước', pron: 'Xư-thim be-gwan hwa-gin-he' },
+          { id: 42, category: '통신/네트워크', term: '통신 상태 확인해', meaning: '', vi: 'Kiểm tra tình trạng liên lạc', pron: 'Thông-xin xang-thê hwa-gin-he' },
+          { id: 43, category: '통신/네트워크', term: '선내 와이파이 확인해', meaning: '', vi: 'Kiểm tra wifi trên tàu', pron: 'Xơn-ne wa-i-pha-i hwa-gin-he' },
+          { id: 44, category: '통신/네트워크', term: '감도, 감도', meaning: '(무전기 교신 확인할때 사용) 내 말 들려?', vi: 'Nghe rõ không (Thử bộ đàm)', pron: 'Gam-đô gam-đô' },
+          { id: 45, category: '통신/네트워크', term: '무전기 챙겨', meaning: '', vi: 'Mang theo bộ đàm', pron: 'Mu-chơn-gi cheng-gyơ' },
+          { id: 46, category: '구역/이동', term: '배에 올라가', meaning: '', vi: 'Lên tàu', pron: 'Be-ê ôn-ra-ga' },
+          { id: 47, category: '구역/이동', term: '브릿지로 가', meaning: 'Wheel House로 가', vi: 'Đi lên buồng lái (Bridge)', pron: 'Bư-rít-chi-rô ga' },
+          { id: 48, category: '구역/이동', term: 'ECR로 가', meaning: 'ECR(Engine control room)로 가', vi: 'Đi đến phòng điều khiển buồng máy (ECR)', pron: 'I-xi-al-rô ga' },
+          { id: 49, category: '구역/이동', term: '디지룸으로 가', meaning: '비상 발전기실로 가', vi: 'Đi đến phòng máy phát điện khẩn cấp', pron: 'Đi-chi-rum-ư-rô ga' },
+          { id: 50, category: '구역/이동', term: '로컬로 가', meaning: '장비 위치로 가', vi: 'Đi đến chỗ thiết bị (Local)', pron: 'Rô-khơn-rô ga' },
+          { id: 51, category: '도면/서류', term: '파워도면 봐봐', meaning: 'Power Connection 도면 확인해 봐', vi: 'Xem bản vẽ nguồn điện (Power)', pron: 'Pha-wơ-đô-myơn bwa-bwa' },
+          { id: 52, category: '도면/서류', term: '커넥션도면 봐봐', meaning: 'Control Connection 도면 확인해 봐', vi: 'Xem bản vẽ kết nối (Connection)', pron: 'Khơ-néc-xyơn-đô-myơn bwa-bwa' },
+          { id: 53, category: '도면/서류', term: '메이커도면 봐봐', meaning: '장비 공급 메이커 도면 확인해 봐', vi: 'Xem bản vẽ của nhà sản xuất (Maker)', pron: 'Mê-i-khơ-đô-myơn bwa-bwa' },
+          { id: 54, category: '도면/서류', term: '매뉴얼 읽어봐', meaning: '', vi: 'Đọc hướng dẫn sử dụng (Manual)', pron: 'Me-nyu-ơn il-gơ-bwa' },
+          { id: 55, category: '검사/보고', term: '선주 확인받아', meaning: '', vi: 'Lấy xác nhận của chủ tàu', pron: 'Xơn-chu hwa-gin-ba-đa' },
+          { id: 56, category: '검사/보고', term: '테스트 완료했다고 해', meaning: '', vi: 'Báo là đã kiểm tra xong', pron: 'Thê-xư-thư wal-ryô-hét-đa-gô he' },
+          { id: 57, category: '검사/보고', term: '코멘트 수정해', meaning: '', vi: 'Sửa chữa các lỗi bị nhắc nhở (Comment)', pron: 'Khô-mên-thư xu-chơng-he' },
+          { id: 58, category: '검사/보고', term: '테스트 결과 써', meaning: '', vi: 'Viết kết quả kiểm tra', pron: 'Thê-xư-thư gyơn-gwa xxơ' },
+          { id: 59, category: '검사/보고', term: '검사 후에 원상복구 해라', meaning: '', vi: 'Kiểm tra xong nhớ phục hồi nguyên trạng', pron: 'Gơm-xa hu-ê wơn-xang-bốc-gu he-ra' },
+          { id: 60, category: '안전/기타', term: 'LOTO 실시해', meaning: 'LOTO(LOCK OUT TAG OUT) 실시해', vi: 'Khóa bảng điện an toàn (LOTO)', pron: 'Rô-thô xil-xi-he' },
+          { id: 61, category: '안전/기타', term: '과부하 조심해', meaning: '', vi: 'Cẩn thận quá tải', pron: 'Gwa-bu-hwa chô-xim-he' },
+          { id: 62, category: '안전/기타', term: '확인 점검 실시해', meaning: '', vi: 'Tiến hành kiểm tra xác nhận', pron: 'Hwa-gin chơm-gơm xil-xi-he' },
+          { id: 63, category: '안전/기타', term: '오늘 할 일 확인해', meaning: '', vi: 'Kiểm tra việc phải làm hôm nay', pron: 'Ô-nưn hal il hwa-gin-he' },
+          { id: 64, category: '안전/기타', term: '데이터 저장해', meaning: '', vi: 'Lưu dữ liệu lại', pron: 'Đê-i-thơ chơ-chang-he' },
+          { id: 65, category: '안전/기타', term: '비상등 켜지나 봐', meaning: '', vi: 'Xem đèn khẩn cấp có sáng không', pron: 'Bi-xang-đưng khyơ-chi-na bwa' },
+          { id: 66, category: '안전/기타', term: '에어 가득 채워', meaning: '', vi: 'Bơm đầy khí nén', pron: 'E-ơ ga-đức che-wơ' },
+          { id: 67, category: '안전/기타', term: '마지막 청소해', meaning: '', vi: 'Dọn dẹp vệ sinh lần cuối', pron: 'Ma-chi-mác chơng-xô-he' },
+          { id: 68, category: '안전/기타', term: '야간 작업 주의해', meaning: '', vi: 'Chú ý khi làm việc ban đêm', pron: 'Ya-gan cha-gớp chu-ưi-he' },
+          { id: 69, category: '안전/기타', term: '구명 조끼 위치 봐', meaning: '', vi: 'Xem vị trí áo phao ở đâu', pron: 'Gu-myơng chốc-kki wi-chi bwa' },
+          { id: 70, category: '안전/기타', term: '필요한 서류 챙겨', meaning: '', vi: 'Mang theo giấy tờ cần thiết', pron: 'Phi-ryô-han xơ-ryu cheng-gyơ' },
+          { id: 71, category: '안전/기타', term: '선주 정중하게 대해', meaning: '', vi: 'Cư xử lịch sự với chủ tàu', pron: 'Xơn-chu chơng-chung-ha-ge đe-he' },
+          { id: 72, category: '안전/기타', term: '긴급 정지 버튼 눌러', meaning: '', vi: 'Bấm nút dừng khẩn cấp', pron: 'Gin-gưp chơng-chi bơn-thư nun-rơ' },
+          { id: 73, category: '안전/기타', term: '엔진 온도 체크해', meaning: '', vi: 'Kiểm tra nhiệt độ động cơ', pron: 'Ên-chin ôn-đô chê-khư-he' },
+          { id: 74, category: '안전/기타', term: '잠시 대기', meaning: '', vi: 'Chờ một lát', pron: 'Cham-xi đê-gi' }
+        ]
+      }), []);
+
+      const currentData = learningData[activeTab] || [];
+
+      // --- 퀴즈 관련 상태 관리 ---
+      const [quizQuestions, setQuizQuestions] = useState([]);
+      const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+      const [quizScore, setQuizScore] = useState(0);
+      const [quizState, setQuizState] = useState('idle'); // 'idle', 'playing', 'result'
+      const [selectedAnswer, setSelectedAnswer] = useState(null);
+      const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
+
+      // 퀴즈 시작 함수
+      const startQuiz = () => {
+        if (currentData.length < 4) {
+          alert("퀴즈를 진행하기 위한 단어가 부족합니다. (최소 4개 필요)");
+          return;
+        }
+
+        const shuffledData = [...currentData].sort(() => 0.5 - Math.random());
+        const selectedQuestions = shuffledData.slice(0, 10);
+
+        const questionsWithOptions = selectedQuestions.map(q => {
+          let incorrectOptions = currentData.filter(item => item.id !== q.id);
+          incorrectOptions = incorrectOptions.sort(() => 0.5 - Math.random()).slice(0, 3);
+          
+          const options = [q, ...incorrectOptions].sort(() => 0.5 - Math.random());
+          return { ...q, options: options };
+        });
+
+        setQuizQuestions(questionsWithOptions);
+        setCurrentQuizIndex(0);
+        setQuizScore(0);
+        setQuizState('playing');
+        setSelectedAnswer(null);
+        setIsAnswerCorrect(null);
+      };
+
+      // 퀴즈 정답 선택 처리 함수
+      const handleAnswerSelect = (option) => {
+        if (selectedAnswer) return;
+
+        setSelectedAnswer(option);
+        const correct = option.id === quizQuestions[currentQuizIndex].id;
+        setIsAnswerCorrect(correct);
+
+        if (correct) {
+          setQuizScore(prev => prev + 1);
+        }
+
+        setTimeout(() => {
+          if (currentQuizIndex < quizQuestions.length - 1) {
+            setCurrentQuizIndex(prev => prev + 1);
+            setSelectedAnswer(null);
+            setIsAnswerCorrect(null);
+          } else {
+            setQuizState('result');
+          }
+        }, 1500);
+      };
+
+      // --- 브라우저 기본 음성(TTS) 재생 함수 ---
+      const speakText = (text) => {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'ko-KR';
+          utterance.rate = 0.8;
+          utterance.pitch = 1.0;
+          window.speechSynthesis.speak(utterance);
+        } else {
+          alert(`음성 파일을 찾을 수 없습니다.\n\n'audio' 폴더 안에 '${text}.mp3' 파일이 정확히 있는지 확인해주세요.`);
+        }
+      };
+
+      // --- MP3 먼저 재생, 실패 시 TTS로 자동 대체 ---
+      const playAudio = (term) => {
+        const audioUrl = `./audio/${term}.mp3`;
+        const audio = new Audio(audioUrl);
+        
+        let isFallbackTriggered = false;
+
+        const triggerFallback = () => {
+          if (!isFallbackTriggered) {
+            isFallbackTriggered = true;
+            console.log(`[안내] '${term}.mp3' 파일이 없어 브라우저 기본 음성(TTS)으로 대체합니다.`);
+            speakText(term);
+          }
+        };
+
+        audio.addEventListener('error', triggerFallback);
+        audio.play().catch((error) => {
+          triggerFallback();
+        });
+      };
+
+      // --- 화면 렌더링 파트 ---
+      const renderHome = () => (
+        <div className="flex flex-col items-center justify-center h-full space-y-8 animate-fade-in-up">
+          <p className="text-xl md:text-2xl text-slate-600 font-medium text-center">
+            현장 한국어를 쉽고 빠르게!<br/>어떤 모드를 선택하시겠습니까?
+          </p>
+          <div className="flex flex-col md:flex-row gap-6 w-full max-w-2xl px-4">
+            <button onClick={() => setCurrentView('learn')} className="flex-1 group relative overflow-hidden bg-white p-8 rounded-3xl border border-blue-100 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <div className="w-20 h-20 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-black text-slate-800 mb-2">학습하기</h2>
+                <p className="text-slate-500 font-medium">부서별 현장 용어와 발음을 공부합니다.</p>
+              </div>
+            </button>
+            <button onClick={() => setCurrentView('quiz')} className="flex-1 group relative overflow-hidden bg-white p-8 rounded-3xl border border-teal-100 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10 flex flex-col items-center text-center">
+                <div className="w-20 h-20 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h2 className="text-3xl font-black text-slate-800 mb-2">퀴즈풀기</h2>
+                <p className="text-slate-500 font-medium">배운 단어를 퀴즈로 테스트해 봅니다.</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      );
+
+      const renderLearn = () => (
+        <div className="flex flex-col h-full animate-fade-in-up">
+          <div className="w-full mb-6 shrink-0">
+            <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
+                    activeTab === tab
+                      ? 'bg-blue-600 text-white shadow-md transform scale-105 border border-blue-600'
+                      : 'bg-white text-slate-500 border border-slate-200 hover:bg-blue-50 hover:text-blue-700'
+                  }`}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-slate-50 rounded-2xl p-4 md:p-6 border border-slate-100 shadow-inner flex flex-col flex-1 min-h-0">
+            <div className="flex justify-between items-end mb-4 px-2 shrink-0">
+              <h2 className="text-lg font-bold text-slate-700">
+                <span className="text-blue-600">[{activeTab}]</span> 현장 용어 학습
+              </h2>
+              <span className="text-sm text-slate-500 font-bold bg-white px-3 py-1 rounded-full border border-slate-200 shadow-sm">
+                총 <span className="text-blue-600">{currentData.length}</span>개
+              </span>
+            </div>
+
+            <div className="overflow-y-auto custom-scrollbar pr-2 space-y-4 flex-1">
+              {currentData.length > 0 ? (
+                currentData.map((item) => (
+                  <div key={item.id} className="bg-white p-5 rounded-xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-100 transition-all duration-200 group">
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-bold rounded-md mb-3 border border-blue-100">
+                          {item.category}
+                        </span>
+                        <div className="mb-4">
+                          <h3 className="text-2xl font-black text-slate-800 tracking-tight group-hover:text-blue-900 transition-colors">
+                            {item.term}
+                          </h3>
+                          {item.meaning && (
+                            <p className="text-sm font-medium text-slate-500 leading-relaxed mt-1.5">
+                              {item.meaning}
+                            </p>
+                          )}
+                        </div>
+                        <div className="bg-slate-50/80 rounded-lg p-3.5 border border-slate-100/80 group-hover:bg-blue-50/30 transition-colors">
+                          <p className="text-base font-bold text-teal-700 mb-1.5">
+                            🇻🇳 {item.vi}
+                          </p>
+                          <p className="text-sm font-medium text-slate-500 italic">
+                            🗣️ {item.pron}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <button 
+                        onClick={() => playAudio(item.term)}
+                        className="ml-4 p-3.5 mt-2 rounded-full bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white hover:shadow-md active:scale-95 transition-all duration-200" 
+                        title="한국어 발음 듣기"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-10 text-slate-400 font-medium flex flex-col items-center justify-center h-full">
+                  <p>해당 부서의 학습 데이터가 아직 준비되지 않았습니다.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+
+      const renderQuiz = () => {
+        return (
+          <div className="flex flex-col h-full animate-fade-in-up">
+            <div className="w-full mb-6 shrink-0">
+              <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => {
+                      setActiveTab(tab);
+                      setQuizState('idle');
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
+                      activeTab === tab
+                        ? 'bg-teal-600 text-white shadow-md transform scale-105 border border-teal-600'
+                        : 'bg-white text-slate-500 border border-slate-200 hover:bg-teal-50 hover:text-teal-700'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-inner flex flex-col items-center justify-center flex-1 min-h-0 text-center">
+              
+              {quizState === 'idle' && (
+                <div className="max-w-md w-full">
+                  <div className="bg-teal-100 text-teal-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-black text-slate-800 mb-2">
+                    [{activeTab}] 퀴즈
+                  </h2>
+                  <p className="text-slate-500 mb-8">
+                    베트남어 뜻을 보고 올바른 한국어 지시어를 맞춰보세요.<br/>총 10문제가 출제됩니다.
+                  </p>
+                  <button onClick={startQuiz} className="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white text-xl font-bold rounded-xl shadow-lg transition-colors">
+                    퀴즈 시작하기
+                  </button>
+                </div>
+              )}
+
+              {quizState === 'playing' && quizQuestions.length > 0 && (
+                <div className="max-w-2xl w-full flex flex-col h-full">
+                  <div className="flex justify-between items-center mb-6 shrink-0">
+                    <span className="text-teal-700 font-bold text-lg">Question {currentQuizIndex + 1} / {quizQuestions.length}</span>
+                    <span className="text-slate-500 font-medium">Score: <span className="text-teal-600 font-bold">{quizScore}</span></span>
+                  </div>
+
+                  <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-6 shrink-0">
+                    <span className="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-md mb-4 border border-teal-100">
+                      {quizQuestions[currentQuizIndex].category}
+                    </span>
+                    <p className="text-sm text-slate-500 font-medium mb-2">이 의미를 가진 한국어 지시어는 무엇일까요?</p>
+                    <h3 className="text-3xl font-black text-teal-800 tracking-tight leading-snug">
+                      🇻🇳 {quizQuestions[currentQuizIndex].vi}
+                    </h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 content-start">
+                    {quizQuestions[currentQuizIndex].options.map((option, index) => {
+                      let btnClass = "bg-white text-slate-700 border-slate-200 hover:border-teal-500 hover:bg-teal-50";
+                      
+                      if (selectedAnswer) {
+                        if (option.id === quizQuestions[currentQuizIndex].id) {
+                          btnClass = "bg-green-500 text-white border-green-600 shadow-md transform scale-105";
+                        } else if (selectedAnswer.id === option.id) {
+                          btnClass = "bg-red-500 text-white border-red-600 opacity-80";
+                        } else {
+                          btnClass = "bg-slate-100 text-slate-400 border-slate-200 opacity-50";
+                        }
+                      }
+
+                      return (
+                        <button
+                          key={index}
+                          onClick={() => handleAnswerSelect(option)}
+                          disabled={selectedAnswer !== null}
+                          className={`p-6 text-left rounded-xl border-2 text-xl font-bold transition-all duration-200 ${btnClass}`}
+                        >
+                          {option.term}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {quizState === 'result' && (
+                <div className="max-w-md w-full animate-fade-in-up">
+                  <div className="w-24 h-24 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c.25.112.526.174.818.174.292 0 .569-.062.818-.174L5 10.274zm10 0l-.818 2.552c.25.112.526.174.818.174.292 0 .569-.062.818-.174L15 10.274z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <h2 className="text-3xl font-black text-slate-800 mb-2">퀴즈 완료!</h2>
+                  <p className="text-lg text-slate-600 mb-8 font-medium">
+                    10문제 중 <span className="text-3xl font-black text-teal-600 mx-2">{quizScore}</span>문제를 맞췄습니다.
+                  </p>
+                  <div className="flex gap-4">
+                    <button onClick={startQuiz} className="flex-1 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-md transition-colors">다시 풀기</button>
+                    <button onClick={() => setCurrentView('home')} className="flex-1 py-3 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold rounded-xl shadow-sm transition-colors">처음으로</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-start py-10 px-4">
+          <div className="fixed top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-700 to-teal-500 shadow-sm z-50"></div>
+          
+          {currentView !== 'home' && (
+            <button onClick={() => { setCurrentView('home'); setQuizState('idle'); }} className="absolute top-6 left-6 md:top-8 md:left-8 z-40 bg-white/80 backdrop-blur-sm p-2 rounded-full shadow-sm border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center pr-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+              <span className="font-bold text-sm">뒤로</span>
+            </button>
+          )}
+
+          <div className="w-full max-w-5xl mt-6 relative px-6 py-8 md:px-12 md:py-10 bg-white/80 backdrop-blur-md shadow-xl shadow-blue-900/5 rounded-3xl border border-white flex flex-col h-[85vh]">
+            <div className="text-center shrink-0 mb-6">
+              <h1 className="text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-950 to-blue-700 tracking-tight leading-tight py-2 cursor-pointer" onClick={() => setCurrentView('home')}>
+                삼호 Yard 한국어
+              </h1>
+              <div className="w-16 h-1.5 bg-blue-600 rounded-full mx-auto mt-4 opacity-90"></div>
+            </div>
+
+            <div className="flex-1 min-h-0 relative">
+              {currentView === 'home' && renderHome()}
+              {currentView === 'learn' && renderLearn()}
+              {currentView === 'quiz' && renderQuiz()}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
