@@ -40,7 +40,7 @@
 
   <!-- 여기서부터 담당자님의 리액트 코드입니다 -->
   <script type="text/babel">
-    const { useState, useMemo } = React;
+    const { useState, useMemo, useEffect } = React;
 
     function App() {
       // 화면 상태 관리: 'home'(첫 화면), 'learn'(학습 모드), 'quiz'(퀴즈 모드)
@@ -226,7 +226,7 @@
           { id: 23, category: '검사/테스트', term: '수압 테스트 준비 완료됐나요?', meaning: '', vi: 'Đã chuẩn bị xong thử áp lực nước chưa?', pron: 'Xu-áp thê-xư-thư chun-bi wal-lyô-đwén-na-yô' },
           { id: 24, category: '검사/테스트', term: '이면 확인해', meaning: '', vi: 'Kiểm tra mặt sau', pron: 'I-myơn hwa-gin-he' },
           { id: 25, category: '검사/테스트', term: 'RT 구간 대피하세요', meaning: '', vi: 'Tránh khỏi khu vực chụp RT (X-quang)', pron: 'Al-thi gu-gan đê-phi-ha-xê-yô' },
-          { id: 26, category: '검사/테스트', term: '선주 검사 대비 청소하세요', meaning: '', vi: 'Dọn dẹp chuẩn bị cho chủ tàu kiểm tra', pron: 'Xơn-chu gơm-xa đê-bi chơng-xô-ha-xê-yô' },
+          { id: 26, category: '검사/테스트', term: '선주 검사 대비 청소하세요', meaning: '', vi: 'Dọn dẹp chuẩn 개인 cho chủ tàu kiểm tra', pron: 'Xơn-chu gơm-xa đê-bi chơng-xô-ha-xê-yô' },
           { id: 27, category: '도면/서류', term: '도면 최신 리비전 확인하세요', meaning: '', vi: 'Kiểm tra xem phải bản vẽ mới nhất không', pron: 'Đô-myơn chwê-xin ri-bi-chơn hwa-gin-ha-xê-yô' },
           { id: 28, category: '검사/수정', term: '오작 난 부분 마킹해 뒀습니다', meaning: '', vi: 'Đã đánh dấu phần làm sai', pron: 'Ô-chác nan bu-bun ma-khing-he đwớt-xưm-ni-đa' },
           { id: 29, category: '블록/탑재', term: '블록 탑재 대기해', meaning: '', vi: 'Chờ lắp ráp block', pron: 'Bư-lốc tháp-che đê-gi-he' },
@@ -420,7 +420,7 @@
           { id: 26, category: '크레인/장비', term: '크레인 신호수 불러와', meaning: '', vi: 'Gọi người đánh tín hiệu cẩu lại đây', pron: 'Khư-rê-in xin-hô-xu bun-rơ-wa' },
           { id: 27, category: '안전/수칙', term: '낙하물 주의해', meaning: '', vi: 'Chú ý vật rơi từ trên xuống', pron: 'Nác-ha-mun chu-ưi-he' },
           { id: 28, category: '정리/청소', term: '시마이해', meaning: '일 마무리해', vi: 'Kết thúc công việc', pron: 'Xi-mai-he' },
-          { id: 29, category: '작업/이동', term: '족장 상부 건조 작업해', meaning: '', vi: 'Làm việc ở phía trên giàn giáo', pron: 'Chốc-chang xang-bu gơn-chô cha-gớp-he' },
+          { id: 29, category: '작업/이동', term: '족장 상부 건조 작업해', meaning: '', vi: 'Làm việc ở phía 정 giàn giáo', pron: 'Chốc-chang xang-bu gơn-chô cha-gớp-he' },
           { id: 30, category: '수정/사상', term: '선체 외부 사상해', meaning: '선체 외부 그라인딩 해', vi: 'Mài nhẵn mặt ngoài vỏ tàu', pron: 'Xơn-chê we-bu xa-xang-he' },
           { id: 31, category: '정리/청소', term: '용접기 정리정돈해', meaning: '', vi: 'Sắp xếp gọn gàng máy hàn', pron: 'Yông-chớp-gi chơng-ri-chơng-đôn-he' },
           { id: 32, category: '전장/설비', term: '본선 조명 설치해', meaning: '', vi: 'Lắp đặt đèn chiếu sáng trên tàu', pron: 'Bôn-xơn chô-myơng xơn-chi-he' },
@@ -458,7 +458,7 @@
           { id: 64, category: '통신/보고', term: 'TBM 전산 등록해', meaning: 'TBM(Tool Box Meeting) 전산 등록 해', vi: 'Đăng ký TBM lên hệ thống', pron: 'Thi-bi-em chơn-xan đưng-nốc-he' },
           { id: 65, category: '통신/보고', term: '작업지시 전산 확인해', meaning: '', vi: 'Kiểm tra chỉ thị làm việc trên hệ thống', pron: 'Cha-gớp-chi-xi chơn-xan hwa-gin-he' },
           { id: 66, category: '안전/보호구', term: '안전모 착용해', meaning: '', vi: 'Đội mũ an toàn vào', pron: 'An-chơn-mô chắc-yong-he' },
-          { id: 67, category: '안전/보호구', term: '안전벨트 체결해', meaning: '', vi: 'Thắt dây an toàn', pron: 'An-chơn-bên-thư chê-gyơn-he' },
+          { id: 67, category: '안전/보호구', term: '안전벨 체결해', meaning: '', vi: 'Thắt dây an toàn', pron: 'An-chơn-bên-thư chê-gyơn-he' },
           { id: 68, category: '안전/보호구', term: '보안경 착용해', meaning: '', vi: 'Đeo kính bảo hộ vào', pron: 'Bô-an-gyơng chắc-yong-he' },
           { id: 69, category: '안전/보호구', term: '귀마개 착용해', meaning: '', vi: 'Đeo nút bịt tai vào', pron: 'Gwi-ma-ge chắc-yong-he' },
           { id: 70, category: '안전/수칙', term: '발판 조심해', meaning: '', vi: 'Cẩn thận giàn giáo/mâm giáo', pron: 'Bal-phan chô-xim-he' },
@@ -579,7 +579,7 @@
           { id: 54, category: '도면/서류', term: '매뉴얼 읽어봐', meaning: '', vi: 'Đọc hướng dẫn sử dụng (Manual)', pron: 'Me-nyu-ơn il-gơ-bwa' },
           { id: 55, category: '검사/보고', term: '선주 확인받아', meaning: '', vi: 'Lấy xác nhận của chủ tàu', pron: 'Xơn-chu hwa-gin-ba-đa' },
           { id: 56, category: '검사/보고', term: '테스트 완료했다고 해', meaning: '', vi: 'Báo là đã kiểm tra xong', pron: 'Thê-xư-thư wal-ryô-hét-đa-gô he' },
-          { id: 57, category: '검사/보고', term: '코멘트 수정해', meaning: '', vi: 'Sửa chữa các lỗi bị nhắc nhở (Comment)', pron: 'Khô-mên-thư xu-chơng-he' },
+          { id: 57, category: '검사/보고', term: '코멘트 수정해', meaning: '', vi: 'Sửa chữa các lỗi bị nhắc 단어 (Comment)', pron: 'Khô-mên-thư xu-chơng-he' },
           { id: 58, category: '검사/보고', term: '테스트 결과 써', meaning: '', vi: 'Viết kết quả kiểm tra', pron: 'Thê-xư-thư gyơn-gwa xxơ' },
           { id: 59, category: '검사/보고', term: '검사 후에 원상복구 해라', meaning: '', vi: 'Kiểm tra xong nhớ phục hồi nguyên trạng', pron: 'Gơm-xa hu-ê wơn-xang-bốc-gu he-ra' },
           { id: 60, category: '안전/기타', term: 'LOTO 실시해', meaning: 'LOTO(LOCK OUT TAG OUT) 실시해', vi: 'Khóa bảng điện an toàn (LOTO)', pron: 'Rô-thô xil-xi-he' },
@@ -609,55 +609,6 @@
       const [quizState, setQuizState] = useState('idle'); // 'idle', 'playing', 'result'
       const [selectedAnswer, setSelectedAnswer] = useState(null);
       const [isAnswerCorrect, setIsAnswerCorrect] = useState(null);
-
-      // 퀴즈 시작 함수
-      const startQuiz = () => {
-        if (currentData.length < 4) {
-          alert("퀴즈를 진행하기 위한 단어가 부족합니다. (최소 4개 필요)");
-          return;
-        }
-
-        const shuffledData = [...currentData].sort(() => 0.5 - Math.random());
-        const selectedQuestions = shuffledData.slice(0, 10);
-
-        const questionsWithOptions = selectedQuestions.map(q => {
-          let incorrectOptions = currentData.filter(item => item.id !== q.id);
-          incorrectOptions = incorrectOptions.sort(() => 0.5 - Math.random()).slice(0, 3);
-          
-          const options = [q, ...incorrectOptions].sort(() => 0.5 - Math.random());
-          return { ...q, options: options };
-        });
-
-        setQuizQuestions(questionsWithOptions);
-        setCurrentQuizIndex(0);
-        setQuizScore(0);
-        setQuizState('playing');
-        setSelectedAnswer(null);
-        setIsAnswerCorrect(null);
-      };
-
-      // 퀴즈 정답 선택 처리 함수
-      const handleAnswerSelect = (option) => {
-        if (selectedAnswer) return;
-
-        setSelectedAnswer(option);
-        const correct = option.id === quizQuestions[currentQuizIndex].id;
-        setIsAnswerCorrect(correct);
-
-        if (correct) {
-          setQuizScore(prev => prev + 1);
-        }
-
-        setTimeout(() => {
-          if (currentQuizIndex < quizQuestions.length - 1) {
-            setCurrentQuizIndex(prev => prev + 1);
-            setSelectedAnswer(null);
-            setIsAnswerCorrect(null);
-          } else {
-            setQuizState('result');
-          }
-        }, 1500);
-      };
 
       // --- 브라우저 기본 음성(TTS) 재생 함수 ---
       const speakText = (text) => {
@@ -692,6 +643,74 @@
         audio.play().catch((error) => {
           triggerFallback();
         });
+      };
+
+      // 퀴즈 자동 음성 재생 (문제가 바뀔 때마다)
+      useEffect(() => {
+        if (quizState === 'playing' && quizQuestions.length > 0) {
+          playAudio(quizQuestions[currentQuizIndex].term);
+        }
+      }, [currentQuizIndex, quizState, quizQuestions]);
+
+      // 완벽한 랜덤 섞기 함수 (Fisher-Yates Shuffle)
+      const shuffleArray = (array) => {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+      };
+
+      // 퀴즈 시작 함수
+      const startQuiz = () => {
+        if (currentData.length < 4) {
+          alert("퀴즈를 진행하기 위한 단어가 부족합니다. (최소 4개 필요)");
+          return;
+        }
+
+        // 전체 데이터에서 완벽하게 랜덤으로 10문제를 뽑습니다.
+        const shuffledData = shuffleArray(currentData);
+        const selectedQuestions = shuffledData.slice(0, 10);
+
+        // 보기 4개도 완벽하게 랜덤으로 섞습니다.
+        const questionsWithOptions = selectedQuestions.map(q => {
+          let incorrectOptions = currentData.filter(item => item.id !== q.id);
+          incorrectOptions = shuffleArray(incorrectOptions).slice(0, 3);
+          
+          const options = shuffleArray([q, ...incorrectOptions]);
+          return { ...q, options: options };
+        });
+
+        setQuizQuestions(questionsWithOptions);
+        setCurrentQuizIndex(0);
+        setQuizScore(0);
+        setQuizState('playing');
+        setSelectedAnswer(null);
+        setIsAnswerCorrect(null);
+      };
+
+      // 퀴즈 정답 선택 처리 함수
+      const handleAnswerSelect = (option) => {
+        if (selectedAnswer) return;
+
+        setSelectedAnswer(option);
+        const correct = option.id === quizQuestions[currentQuizIndex].id;
+        setIsAnswerCorrect(correct);
+
+        if (correct) {
+          setQuizScore(prev => prev + 1);
+        }
+
+        setTimeout(() => {
+          if (currentQuizIndex < quizQuestions.length - 1) {
+            setCurrentQuizIndex(prev => prev + 1);
+            setSelectedAnswer(null);
+            setIsAnswerCorrect(null);
+          } else {
+            setQuizState('result');
+          }
+        }, 1500);
       };
 
       // --- 화면 렌더링 파트 ---
@@ -732,20 +751,39 @@
       const renderLearn = () => (
         <div className="flex flex-col h-full animate-fade-in-up">
           <div className="w-full mb-6 shrink-0">
-            <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
-              {tabs.map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
-                    activeTab === tab
-                      ? 'bg-blue-600 text-white shadow-md transform scale-105 border border-blue-600'
-                      : 'bg-white text-slate-500 border border-slate-200 hover:bg-blue-50 hover:text-blue-700'
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+            <div className="flex flex-col gap-2 md:gap-3 items-center">
+              {/* 위 5개 탭 */}
+              <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+                {tabs.slice(0, 5).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
+                      activeTab === tab
+                        ? 'bg-blue-600 text-white shadow-md transform scale-105 border border-blue-600'
+                        : 'bg-white text-slate-500 border border-slate-200 hover:bg-blue-50 hover:text-blue-700'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+              {/* 아래 5개 탭 */}
+              <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+                {tabs.slice(5, 10).map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
+                      activeTab === tab
+                        ? 'bg-blue-600 text-white shadow-md transform scale-105 border border-blue-600'
+                        : 'bg-white text-slate-500 border border-slate-200 hover:bg-blue-50 hover:text-blue-700'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -814,23 +852,45 @@
         return (
           <div className="flex flex-col h-full animate-fade-in-up">
             <div className="w-full mb-6 shrink-0">
-              <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => {
-                      setActiveTab(tab);
-                      setQuizState('idle');
-                    }}
-                    className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
-                      activeTab === tab
-                        ? 'bg-teal-600 text-white shadow-md transform scale-105 border border-teal-600'
-                        : 'bg-white text-slate-500 border border-slate-200 hover:bg-teal-50 hover:text-teal-700'
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
+              <div className="flex flex-col gap-2 md:gap-3 items-center">
+                {/* 위 5개 탭 */}
+                <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+                  {tabs.slice(0, 5).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => {
+                        setActiveTab(tab);
+                        setQuizState('idle');
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
+                        activeTab === tab
+                          ? 'bg-teal-600 text-white shadow-md transform scale-105 border border-teal-600'
+                          : 'bg-white text-slate-500 border border-slate-200 hover:bg-teal-50 hover:text-teal-700'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+                {/* 아래 5개 탭 */}
+                <div className="flex flex-wrap justify-center gap-2 md:gap-2.5">
+                  {tabs.slice(5, 10).map((tab) => (
+                    <button
+                      key={tab}
+                      onClick={() => {
+                        setActiveTab(tab);
+                        setQuizState('idle');
+                      }}
+                      className={`px-4 py-2 rounded-full text-sm md:text-base font-bold transition-all duration-200 ${
+                        activeTab === tab
+                          ? 'bg-teal-600 text-white shadow-md transform scale-105 border border-teal-600'
+                          : 'bg-white text-slate-500 border border-slate-200 hover:bg-teal-50 hover:text-teal-700'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -847,7 +907,7 @@
                     [{activeTab}] 퀴즈
                   </h2>
                   <p className="text-slate-500 mb-8">
-                    베트남어 뜻을 보고 올바른 한국어 지시어를 맞춰보세요.<br/>총 10문제가 출제됩니다.
+                    들려주는 한국어 지시어를 듣고, 올바른 베트남어 뜻을 골라보세요.<br/>매번 무작위로 10문제가 출제됩니다!
                   </p>
                   <button onClick={startQuiz} className="w-full py-4 bg-teal-600 hover:bg-teal-700 text-white text-xl font-bold rounded-xl shadow-lg transition-colors">
                     퀴즈 시작하기
@@ -862,27 +922,37 @@
                     <span className="text-slate-500 font-medium">Score: <span className="text-teal-600 font-bold">{quizScore}</span></span>
                   </div>
 
-                  <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 mb-6 shrink-0">
-                    <span className="inline-block px-3 py-1 bg-teal-50 text-teal-700 text-xs font-bold rounded-md mb-4 border border-teal-100">
-                      {quizQuestions[currentQuizIndex].category}
-                    </span>
-                    <p className="text-sm text-slate-500 font-medium mb-2">이 의미를 가진 한국어 지시어는 무엇일까요?</p>
-                    <h3 className="text-3xl font-black text-teal-800 tracking-tight leading-snug">
-                      🇻🇳 {quizQuestions[currentQuizIndex].vi}
-                    </h3>
+                  <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 mb-6 shrink-0 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-teal-500"></div>
+                    <p className="text-sm text-slate-500 font-bold mb-4">다음 지시어를 듣고 알맞은 의미를 고르시오.</p>
+                    
+                    <div className="flex flex-col items-center justify-center gap-4 my-2">
+                      <button 
+                        onClick={() => playAudio(quizQuestions[currentQuizIndex].term)}
+                        className="w-20 h-20 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center hover:bg-teal-600 hover:text-white hover:shadow-lg transition-all transform hover:scale-105 border border-teal-200"
+                        title="소리 다시 듣기"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 ml-1" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </button>
+                      <h3 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tight leading-snug">
+                        {quizQuestions[currentQuizIndex].term}
+                      </h3>
+                    </div>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 content-start">
+                  <div className="flex flex-col gap-3 flex-1 overflow-y-auto custom-scrollbar pr-2">
                     {quizQuestions[currentQuizIndex].options.map((option, index) => {
                       let btnClass = "bg-white text-slate-700 border-slate-200 hover:border-teal-500 hover:bg-teal-50";
                       
                       if (selectedAnswer) {
                         if (option.id === quizQuestions[currentQuizIndex].id) {
-                          btnClass = "bg-green-500 text-white border-green-600 shadow-md transform scale-105";
+                          btnClass = "bg-green-500 text-white border-green-600 shadow-md transform scale-102";
                         } else if (selectedAnswer.id === option.id) {
                           btnClass = "bg-red-500 text-white border-red-600 opacity-80";
                         } else {
-                          btnClass = "bg-slate-100 text-slate-400 border-slate-200 opacity-50";
+                          btnClass = "bg-slate-50 text-slate-400 border-slate-200 opacity-50";
                         }
                       }
 
@@ -891,9 +961,10 @@
                           key={index}
                           onClick={() => handleAnswerSelect(option)}
                           disabled={selectedAnswer !== null}
-                          className={`p-6 text-left rounded-xl border-2 text-xl font-bold transition-all duration-200 ${btnClass}`}
+                          className={`p-4 text-left rounded-xl border-2 text-lg md:text-xl font-bold transition-all duration-200 flex items-center ${btnClass}`}
                         >
-                          {option.term}
+                          <span className="w-8 shrink-0 text-center opacity-70 mr-2">{index + 1}.</span> 
+                          <span className="leading-snug">{option.vi}</span>
                         </button>
                       );
                     })}
