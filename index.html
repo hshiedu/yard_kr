@@ -16,28 +16,51 @@
       font-family: 'Noto Sans KR', sans-serif; 
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior-y: contain;
-      background-color: #f8fafc; /* slate-50 */
+      background-color: #f8fafc;
     }
     .custom-scrollbar::-webkit-scrollbar { width: 5px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     
-    /* 세련된 화면 전환 애니메이션 */
+    /* 화면 전환 애니메이션 (더 부드럽고 매끄러운 곡선 적용) */
     @keyframes fadeSlideUp { 
-      0% { opacity: 0; transform: translateY(15px); } 
+      0% { opacity: 0; transform: translateY(30px); } 
       100% { opacity: 1; transform: translateY(0); } 
     }
     @keyframes popIn {
-      0% { opacity: 0; transform: scale(0.9); }
-      60% { opacity: 1.05; transform: scale(1.05); }
+      0% { opacity: 0; transform: scale(0.92); }
+      70% { opacity: 1; transform: scale(1.02); }
       100% { opacity: 1; transform: scale(1); }
     }
     
     .animate-fade-slide-up { 
-      animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+      animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; 
     }
     .animate-pop-in {
-      animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: popIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* 순차적 애니메이션 딜레이 추가 (인트로 연출용) */
+    .animate-delay-1 {
+      opacity: 0;
+      animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.5s forwards;
+    }
+    .animate-delay-2 {
+      opacity: 0;
+      animation: fadeSlideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 1.4s forwards;
+    }
+
+    /* 타이틀 네온 & 샤인 효과 */
+    @keyframes shine {
+      to { background-position: 200% center; }
+    }
+    .neon-title {
+      background: linear-gradient(to right, #1e40af, #06b6d4, #3b82f6, #1e40af);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+      text-shadow: 0 0 12px rgba(6, 182, 212, 0.3), 0 0 20px rgba(59, 130, 246, 0.15);
     }
   </style>
 </head>
@@ -61,7 +84,7 @@
       // --- 부서별 전문 라인 아트 SVG 아이콘 맵핑 함수 ---
       const getDeptIcon = (dept) => {
         const svgProps = {
-          className: "w-5 h-5 md:w-8 md:h-8",
+          className: "w-6 h-6 md:w-8 md:h-8",
           fill: "none",
           stroke: "currentColor",
           strokeWidth: "2",
@@ -70,74 +93,110 @@
         };
         
         const icons = {
-          '공통': (
+          '공통': ( // 조선소 (크레인과 블록)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <path d="m9 12 2 2 4-4"/>
+              <path d="M3 22V6h18v16" />
+              <path d="M1 6h22" />
+              <path d="M12 6v5" />
+              <path d="M10 11h4v2h-4z" />
+              <path d="M6 22v-5h12v5" />
+              <path d="M7 17l1.5-3h7L17 17" />
             </svg>
           ),
-          '가공부': (
+          '가공부': ( // 철판가공 (플라즈마/레이저 절단)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-              <circle cx="12" cy="12" r="3"/>
+              <path d="M3 17l4-4h14l-4 4H3z" />
+              <path d="M14 4v5l-2 4" />
+              <path d="M11 4h6v3h-6z" />
+              <path d="M12 13l-2 2" strokeDasharray="2 2" />
             </svg>
           ),
-          '판넬조립부': (
+          '판넬조립부': ( // 평블록 (격자 형태 구조)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <rect width="7" height="7" x="3" y="3" rx="1"/>
-              <rect width="7" height="7" x="14" y="3" rx="1"/>
-              <rect width="7" height="7" x="14" y="14" rx="1"/>
-              <rect width="7" height="7" x="3" y="14" rx="1"/>
+              <path d="M2 18h20" />
+              <path d="M5 18V6m-2 0h4" />
+              <path d="M12 18V6m-2 0h4" />
+              <path d="M19 18V6m-2 0h4" />
+              <path d="M2 12h20" />
             </svg>
           ),
-          '대조립부': (
+          '대조립부': ( // 곡블록 (곡면 구조)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
-              <path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/>
+              <path d="M3 4v8a9 9 0 0 0 18 0V4" />
+              <path d="M3 4h18" />
+              <path d="M3 10h18" />
+              <path d="M12 4v17" />
+              <path d="M7.5 4v14.5" />
+              <path d="M16.5 4v14.5" />
             </svg>
           ),
-          '선행의장부': (
+          '선행의장부': ( // 의장품 설치 (크레인 와이어와 모듈)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+              <rect x="5" y="13" width="14" height="8" rx="1" />
+              <circle cx="12" cy="17" r="2" />
+              <path d="M5 17h5" />
+              <path d="M14 17h5" />
+              <path d="M12 2v7" />
+              <path d="M9 9h6l-3 4-3-4z" />
             </svg>
           ),
-          '선행도장부': (
+          '선행도장부': ( // 도장 (페인트 롤러)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="m9.06 11.9 8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/>
-              <path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/>
+              <rect x="6" y="3" width="12" height="6" rx="1" />
+              <path d="M14 22v-8h6a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-1" />
+              <path d="M12 22v-6h4v6h-4z" />
+              <path d="M3 8c0-3 3-3 3-3" strokeDasharray="2 2" />
             </svg>
           ),
-          '의장부': (
+          '의장부': ( // 의장 배관 (파이프 네트워크)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/>
-              <path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/>
+              <path d="M2 20h20" />
+              <path d="M17 20V4" />
+              <path d="M15 4h4" />
+              <path d="M4 7h3a2 2 0 0 1 2 2v2a2 2 0 0 0 2 2h6" />
+              <path d="M4 5v4" />
+              <path d="M5 15h4" />
+              <path d="M7 15v5" />
+              <path d="M11 18v4" />
+              <path d="M13 11v4" />
             </svg>
           ),
-          '건조부': (
+          '건조부': ( // 도크 (계단식 도크와 선박 정면)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <circle cx="12" cy="5" r="3"/>
-              <line x1="12" y1="22" x2="12" y2="8"/>
-              <path d="M5 12H2a10 10 0 0 0 20 0h-3"/>
+              <path d="M2 4v4h2v4h2v10" />
+              <path d="M22 4v4h-2v4h-2v10" />
+              <path d="M6 22h12" />
+              <path d="M8 22l1-8h6l1 8" />
+              <path d="M10 14v-4h4v4" />
+              <path d="M12 10V6" />
             </svg>
           ),
-          '선실생산부': (
+          '선실생산부': ( // 데크하우스 (선실 다층 구조)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-              <polyline points="9 22 9 12 15 12 15 22"/>
+              <path d="M4 22V14h16v8" />
+              <path d="M6 14V8h12v6" />
+              <path d="M9 8V4h6v4" />
+              <path d="M12 4V2" />
+              <path d="M10 2h4" />
+              <rect x="7" y="17" width="3" height="3" />
+              <rect x="14" y="17" width="3" height="3" />
+              <rect x="10" y="10" width="4" height="2" />
             </svg>
           ),
-          '선박커미셔닝부': (
+          '선박커미셔닝부': ( // 시운전 (파도 위를 항해하는 선박)
             <svg {...svgProps} viewBox="0 0 24 24">
-              <rect width="20" height="14" x="2" y="3" rx="2"/>
-              <line x1="8" y1="21" x2="16" y2="21"/>
-              <line x1="12" y1="17" x2="12" y2="21"/>
+              <path d="M2 14h15l5-4H6z" />
+              <path d="M13 10V6H9v4" />
+              <path d="M11 6V3" />
+              <path d="M2 18c2-1 4-1 6 0s4 1 6 0 4-1 6 0" />
+              <path d="M4 22c2-1 4-1 6 0s4 1 6 0" />
             </svg>
           )
         };
         return icons[dept] || icons['공통'];
       };
 
-      // --- 10개 부서 전체 데이터 ---
+      // --- 전체 데이터 깔끔하게 재정비 ---
       const learningData = useMemo(() => ({
         '공통': [
           { id: 1, category: '안전 및 보호구', term: '보호구 착용해', meaning: '', vi: 'Hãy mặc đồ bảo hộ đầy đủ', pron: 'Bô-hô-gu chắc-yong-he' },
@@ -177,12 +236,12 @@
           { id: 35, category: '작업 지시', term: '가스켓 끼워', meaning: '', vi: 'Lắp gioăng vào', pron: 'Ga-xư-kết kki-wơ' },
           { id: 36, category: '작업 지시', term: '에어불이 해', meaning: '에어로 먼지 불어내', vi: 'Thổi khí nén để làm sạch bụi', pron: 'E-ơ-bu-ri he' },
           { id: 37, category: '작업 지시', term: '송풍기 가동해', meaning: '', vi: 'Bật quạt thông gió', pron: 'Xông-phung-gi ga-đông-he' },
-          { id: 38, category: '작업 지시', term: '사다리 고정해', meaning: '', vi: 'Cố định thang 확실히 chắn', pron: 'Xa-đa-ri gô-chơng-he' },
+          { id: 38, category: '작업 지시', term: '사다리 고정해', meaning: '', vi: 'Cố định thang chắc chắn', pron: 'Xa-đa-ri gô-chơng-he' },
           { id: 39, category: '작업 지시', term: '장비 비 보호해', meaning: '', vi: 'Che chắn thiết bị khỏi mưa', pron: 'Chang-bi bi bô-hô-he' },
           { id: 40, category: '작업 지시', term: '갑바 쳐', meaning: '장비에 덮개 씌워', vi: 'Phủ bạt lên', pron: 'Gáp-ba chyơ' },
           { id: 41, category: '정리 정돈 및 마무리', term: '시마이해', meaning: '일 끝내고 마무리해', vi: 'Kết thúc công việc', pron: 'Xi-mai-he' },
           { id: 42, category: '정리 정돈 및 마무리', term: '시마이하자', meaning: '일 끝내고 마무리하자', vi: 'Cùng dọn dẹp nghỉ nào', pron: 'Xi-mai-ha-cha' },
-          { id: 43, category: '정리 정돈 및 마무리', term: '야리끼리 해', meaning: '작업량 다 채우고 쉬어', vi: 'Làm khoán, làm xong việc được nghỉ', pron: 'Ya-ri-kki-ri he' },
+          { id: 43, category: '정리 정돈 및 마무리', term: '야리끼 해', meaning: '작업량 다 채우고 쉬어', vi: 'Làm khoán, làm xong việc được nghỉ', pron: 'Ya-ri-kki-ri he' },
           { id: 44, category: '정리 정돈 일상', term: '마이존 청소해', meaning: '', vi: 'Dọn dẹp khu vực làm 작업의 mình', pron: 'Ma-i-chôn chơng-xô-he' },
           { id: 45, category: '정리 정돈 일상', term: '빈 깡통 치워', meaning: '', vi: 'Dọn các vỏ lon rỗng', pron: 'Bin kkang-thông chi-wơ' },
           { id: 46, category: '정리 정돈 일상', term: '빈 박스 치워', meaning: '', vi: 'Dọn các hộp carton rỗng', pron: 'Bin bác-xư chi-wơ' },
@@ -219,7 +278,7 @@
           { id: 22, category: '수정/사상', term: '슬래그 제거해', meaning: '', vi: 'Loại bỏ xỉ hàn', pron: 'Xư-lê-gư chê-gơ-he' },
           { id: 23, category: '수정/사상', term: '스파타 털어', meaning: '용접 찌꺼기 털어', vi: 'Phủi vụn tia lửa hàn', pron: 'Xư-pha-tha thơ-rơ' },
           { id: 24, category: '수정/사상', term: '뺑끼 발라', meaning: '페인트 칠해', vi: 'Quét sơn lên', pron: 'Ppeng-kki ban-ra' },
-          { id: 25, category: '수정/사상', term: '뺑끼 까고 발라', meaning: '페인트 벗기고 다시 칠해', vi: 'Cạo sơn cũ rồi quét dặm lại', pron: 'Ppeng-kki kka-gô ban-ra' },
+          { id: 25, category: '수정/사상', term: '뺑끼 까고 발라', meaning: '페인트 벗기고 다시 칠해', vi: 'Cạo sơn cũ 초 rồi quét dặm lại', pron: 'Ppeng-kki kka-gô ban-ra' },
           { id: 26, category: '수정/사상', term: '블록에 불줘', meaning: '열 가해서 모양 잡아', vi: 'Gia nhiệt uốn lại cho khối', pron: 'Bư-lốc-ê bun-chwơ' },
           { id: 27, category: '수정/사상', term: '불질 좀 해라', meaning: '열 가해서 모양 잡아', vi: 'Khò lửa uốn lại đi', pron: 'Bun-chil chôm he-ra' },
           { id: 28, category: '수정/사상', term: '가우징 까불어', meaning: '용접 불량 녹여서 깎아내', vi: 'Thổi điện khoét rãnh', pron: 'Ga-u-ching kka-bu-rơ' },
@@ -321,7 +380,7 @@
           { id: 33, category: '장비/공구', term: '줄걸이 상태 확인해', meaning: '', vi: 'Kiểm tra tình trạng dây cẩu', pron: 'Chul-gơ-ri xang-thê hwa-gin-he' },
           { id: 34, category: '장비/공구', term: '슬링벨트 확인해', meaning: '', vi: 'Kiểm tra dây cáp vải (sling belt)', pron: 'Xư-ling-bên-thư hwa-gin-he' },
           { id: 35, category: '장비/공구', term: '클램프 제대로 물렸는지 보세요', meaning: '', vi: 'Xem kẹp (clamp) đã ngậm chặt chưa', pron: 'Khư-lem-phư chê-đe-rô mun-ryớt-nưn-chi bô-xê-yô' },
-          { id: 36, category: '장비/공구', term: '지브 크레인 간섭 주의하세요', meaning: '', vi: 'Chú ý va chạm với cẩu Jib', pron: 'Chi-bư khư-rê-in gan-xớp chu-ưi-ha-xê-yô' },
+          { id: 36, category: '장비/공구', term: '지브 크레인 간섭 주의하세요', meaning: '', vi: 'Chú 일 va chạm với cẩu Jib', pron: 'Chi-bư khư-rê-in gan-xớp chu-ưi-ha-xê-yô' },
           { id: 37, category: '블록/탑재', term: '권상 시작합니다, 대피하세요', meaning: '', vi: 'Bắt đầu nâng hàng, hãy tránh ra', pron: 'Gwơn-xang xi-chác-ham-ni-đa, đê-phi-ha-xê-yô' },
           { id: 38, category: '블록/탑재', term: '블록 탑재 일정 당겨졌습니다', meaning: '', vi: 'Lịch cẩu block đã được đẩy sớm', pron: 'Bư-lốc tháp-che il-chơng đang-gyơ-chyớt-xưm-ni-đa' }
         ],
@@ -379,7 +438,7 @@
           { id: 4, category: '도장/스프레이', term: '뺑기 색 확인해', meaning: '페인트 색 확인해', vi: 'Kiểm tra màu sơn', pron: 'Ppeng-gi xéc hwa-gin-he' },
           { id: 5, category: '도장/스프레이', term: '홀리데이 없애', meaning: '뭉쳐서 흘러내린 자국 지워', vi: 'Xóa vết sơn chảy', pron: 'Hôn-ri-đê-i ớp-xe' },
           { id: 6, category: '도장/스프레이', term: '리스프레이 들어가', meaning: '다시 칠해', vi: 'Phun sơn lại', pron: 'Ri-xư-phư-rê-i đư-rơ-ga' },
-          { id: 7, category: '도장/스프레이', term: '함 더 칠해', meaning: '한 번 더 칠해', vi: 'Sơn thêm một lớp nữa', pron: 'Ham đơ chil-he' },
+          { id: 7, category: '도장/스프레이', term: '함 더 칠해', meaning: '한 번 더 칠해', vi: 'Sơn thêm 한 lớp nữa', pron: 'Ham đơ chil-he' },
           { id: 8, category: '도장/스프레이', term: '스프레이 거리 유지해', meaning: '', vi: 'Giữ khoảng cách phun sơn', pron: 'Xư-phư-rê-i gơ-ri yu-chi-he' },
           { id: 9, category: '도장/스프레이', term: '퍼스트 뿌려', meaning: '1차 도장해', vi: 'Phun sơn lớp 1', pron: 'Phơ-xư-thư ppu-ryơ' },
           { id: 10, category: '도장/스프레이', term: '세컨 뿌려', meaning: '2차 도장해', vi: 'Phun sơn lớp 2', pron: 'Xê-khơn ppu-ryơ' },
@@ -411,7 +470,7 @@
           { id: 36, category: '작업/구역', term: '데나 보고와', meaning: '수정 작업 확인하고 와', vi: 'Đi xem tình trạng sửa lỗi rồi về', pron: 'Đê-na bô-gô-wa' },
           { id: 37, category: '작업/구역', term: '도장 구역 출입 금지해', meaning: '', vi: 'Cấm vào khu vực sơn', pron: 'Đô-chang gu-yớc chu-ríp gưm-chi-he' },
           { id: 38, category: '작업/구역', term: '정전기 화재 조심해', meaning: '', vi: 'Cẩn thận hỏa hoạn do tĩnh điện', pron: 'Chơng-chơn-gi hwa-che chô-xim-he' },
-          { id: 39, category: '작업/구역', term: '알잘딱해', meaning: '알아서 잘 깔끔하게 해', vi: 'Tự làm cho tốt và gọn gàng vào', pron: 'Al-chal-ttác-he' },
+          { id: 39, category: '작업/구역', term: '알잘딱해', meaning: '알아서 잘 깔끔하게 해', vi: 'Tự làm cho tốt와 gọn gàng vào', pron: 'Al-chal-ttác-he' },
           { id: 40, category: '작업/구역', term: 'A라인에 있어', meaning: '', vi: 'Ở line A', pron: 'Êi-ra-in-ê ít-xơ' },
           { id: 41, category: '작업/구역', term: '셀장 들어가', meaning: '블라스팅장 들어가', vi: 'Vào xưởng phun cát (Cell)', pron: 'Xên-chang đư-rơ-ga' },
           { id: 42, category: '작업/구역', term: '샵 들어가', meaning: '페인트 도장장 들어가', vi: 'Vào xưởng sơn (Shop)', pron: 'Xyáp đư-rơ-ga' },
@@ -434,7 +493,7 @@
           { id: 10, category: '배관/연결', term: '절단 호스 연결해', meaning: '', vi: 'Kết nối ống cắt', pron: 'Chơn-đan hô-xư yơn-gyơn-he' },
           { id: 11, category: '전장/장비', term: '포설해', meaning: '케이블 인입해', vi: 'Rải cáp (kéo cáp)', pron: 'Phô-xơn-he' },
           { id: 12, category: '전장/장비', term: '케이블 타이 묶어', meaning: '', vi: 'Buộc dây thít cáp (cable tie)', pron: 'Khê-i-bưn tha-i mu-kkơ' },
-          { id: 13, category: '전장/장비', term: '발전기 확인해', meaning: '', vi: 'Kiểm ترا máy phát điện', pron: 'Ban-chơn-gi hwa-gin-he' },
+          { id: 13, category: '전장/장비', term: '발전기 확인해', meaning: '', vi: 'Kiểm tra máy phát điện', pron: 'Ban-chơn-gi hwa-gin-he' },
           { id: 14, category: '전장/장비', term: '외부 전원 연결해', meaning: '', vi: 'Kết nối nguồn điện bên ngoài', pron: 'We-bu chơn-wơn yơn-gyơn-he' },
           { id: 15, category: '전장/장비', term: '레벨 센서 달아', meaning: '', vi: 'Lắp cảm biến báo mức', pron: 'Rê-bên xen-xơ 다-ra' },
           { id: 16, category: '전장/장비', term: '전등 켜봐', meaning: '', vi: 'Bật đèn thử xem', pron: 'Chơn-đưng khyơ-bwa' },
@@ -472,7 +531,7 @@
           { id: 48, category: '구역/환경', term: '엔진룸 이동해', meaning: '', vi: 'Di chuyển đến buồng máy', pron: 'Ên-chin-rum i-đông-he' },
           { id: 49, category: '구역/환경', term: '작업 자리 청소해', meaning: '', vi: 'Dọn dẹp chỗ làm việc', pron: 'Cha-gớp cha-ri chơng-xô-he' },
           { id: 50, category: '작업/기타', term: 'LUG를 공기구를 이용해서 잘라', meaning: '', vi: 'Cắt móc cẩu bằng dụng cụ khí nén', pron: 'Rơ-gư-rưn gông-gi-gu-rô i-yông-he-xơ chal-ra' },
-          { id: 51, category: '작업/기타', term: '야간 작업 교대해', meaning: '', vi: 'Bàn giao ca làm đêm', pron: 'Ya-gan cha-gớp gyô-đe-he' },
+          { id: 51, category: '작업/기타', term: '야간 작업 교대해', meaning: '', vi: 'Bàn giao ca làm 밤', pron: 'Ya-gan cha-gớp gyô-đe-he' },
           { id: 52, category: '작업/기타', term: '조금만 들어봐', meaning: '', vi: 'Nâng lên một chút xem', pron: 'Chô-gưm-man đư-rơ-bwa' },
           { id: 53, category: '작업/기타', term: '불받이 설치해', meaning: '(용접 작업 준비 시)불받이 설치해', vi: 'Căng bạt chống cháy', pron: 'Bul-ba-chi xơn-chi-he' }
         ],
@@ -862,21 +921,33 @@
 
       // --- 세련된 화면 전환을 위한 트랜지션 래퍼 ---
       const renderTransitionWrapper = (content, key) => (
-        <div key={key} className="h-full w-full animate-fade-slide-up flex flex-col items-center">
+        <div key={key} className="flex-1 min-h-0 w-full animate-fade-slide-up flex flex-col items-center">
           {content}
         </div>
       );
 
       // --- 화면 렌더링 파트 ---
       const renderHome = () => renderTransitionWrapper(
-        <div className="flex flex-col items-center justify-center h-full space-y-8 w-full">
-          <p className="text-xl md:text-2xl text-slate-600 font-medium text-center leading-relaxed break-keep px-4">
+        <div className="flex flex-col items-center justify-center h-full space-y-6 md:space-y-10 w-full overflow-y-auto custom-scrollbar py-4 px-2">
+          
+          {/* 타이틀 영역 - 딜레이 없이 가장 먼저 나타남 */}
+          <div className="flex flex-col items-center justify-center w-full cursor-pointer animate-fade-slide-up group pb-2">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight break-keep text-center leading-tight transition-transform duration-300 group-hover:scale-105 flex items-center justify-center">
+              <span className="neon-title pb-1">삼호 Yard 한국어</span>
+            </h1>
+            <div className="h-1.5 w-24 sm:w-32 bg-gradient-to-r from-blue-600 to-teal-400 rounded-full mt-2 md:mt-3 opacity-80 shadow-[0_0_12px_rgba(45,212,191,0.6)] group-hover:w-40 transition-all duration-300"></div>
+          </div>
+          
+          {/* 안내 문구 - 약간의 딜레이(0.5초) 후 나타남 */}
+          <p className="animate-delay-1 text-xl md:text-2xl text-slate-600 font-medium text-center leading-relaxed break-keep px-4">
             현장 한국어를 쉽고 빠르게! 어떤 모드를 선택하겠습니까?<br/>
-            <span className="text-sm md:text-base font-normal text-slate-500 mt-2 block">
+            <span className="text-sm md:text-base font-normal text-slate-500 mt-2 block break-words whitespace-normal">
               Học tiếng Hàn hiện trường dễ dàng và nhanh chóng! Bạn muốn chọn chế độ nào?
             </span>
           </p>
-          <div className="flex flex-col md:flex-row gap-5 md:gap-8 w-full max-w-3xl px-4">
+
+          {/* 버튼 영역 - 약 1.4초 딜레이 후 나타남 */}
+          <div className="animate-delay-2 flex flex-col md:flex-row gap-5 md:gap-8 w-full max-w-3xl px-4 pt-4">
             <button onClick={goToLearn} className="flex-1 group relative overflow-hidden bg-white p-8 md:p-10 rounded-[2rem] border border-blue-100 shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1.5 active:scale-95">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <div className="relative z-10 flex flex-col items-center text-center">
@@ -912,34 +983,34 @@
       , 'home');
 
       const renderDeptSelect = () => renderTransitionWrapper(
-        <div className="flex flex-col items-center justify-start h-full w-full pt-4 md:pt-10 overflow-y-auto custom-scrollbar">
-          <div className="bg-white/50 backdrop-blur-sm p-4 md:p-6 rounded-2xl mb-6 md:mb-10 text-center w-full max-w-2xl border border-slate-100 shadow-sm">
+        <div className="flex flex-col items-center justify-start flex-1 min-h-0 w-full pt-4 md:pt-10 overflow-y-auto custom-scrollbar">
+          <div className="bg-white/50 backdrop-blur-sm p-4 md:p-6 rounded-2xl mb-6 md:mb-10 text-center w-full max-w-2xl border border-slate-100 shadow-sm shrink-0">
             <h2 className="text-xl md:text-2xl font-black text-slate-800 break-keep leading-snug">
               {currentView === 'learn' ? (
                 <>
                   <span className="text-blue-600">근무하시는 부서</span>를 선택하고<br/> 학습을 시작해 보세요! 👇
-                  <span className="block text-sm md:text-base font-normal text-slate-500 mt-2">Hãy chọn bộ phận của bạn và bắt đầu học nhé!</span>
+                  <span className="block text-sm md:text-base font-normal text-slate-500 mt-2 break-words whitespace-normal">Hãy chọn bộ phận của bạn và bắt đầu học nhé!</span>
                 </>
               ) : (
                 <>
                   <span className="text-teal-600">근무하시는 부서</span>를 선택하고<br/> 퀴즈에 도전해 보세요! 👇
-                  <span className="block text-sm md:text-base font-normal text-slate-500 mt-2">Hãy chọn bộ phận của bạn và thử giải đố nhé!</span>
+                  <span className="block text-sm md:text-base font-normal text-slate-500 mt-2 break-words whitespace-normal">Hãy chọn bộ phận của bạn và thử giải đố nhé!</span>
                 </>
               )}
             </h2>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-5xl px-2 pb-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-5xl px-2 pb-4 shrink-0">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => handleDeptSelect(tab)}
-                className="group bg-white border-2 border-slate-100 hover:border-blue-400 hover:bg-blue-50 text-slate-700 font-bold py-5 md:py-8 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95 flex flex-col items-center justify-center gap-2 md:gap-3"
+                className="group bg-white border-2 border-slate-100 hover:border-blue-400 hover:bg-blue-50 text-slate-700 font-bold py-5 md:py-8 rounded-2xl shadow-sm hover:shadow-md transition-all active:scale-95 flex flex-col items-center justify-center gap-2 md:gap-3 w-full"
               >
-                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-1 group-hover:scale-110 transition-transform text-2xl md:text-3xl shadow-sm ${currentView === 'learn' ? 'bg-blue-100 text-blue-600' : 'bg-teal-100 text-teal-600'}`}>
+                <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mb-1 group-hover:scale-110 transition-transform text-2xl md:text-3xl shadow-sm shrink-0 ${currentView === 'learn' ? 'bg-blue-100 text-blue-600' : 'bg-teal-100 text-teal-600'}`}>
                    {getDeptIcon(tab)}
                 </div>
-                <span className="text-base md:text-lg break-keep text-center">{tab}</span>
+                <span className="text-base md:text-lg break-keep text-center w-full px-1">{tab}</span>
               </button>
             ))}
           </div>
@@ -947,7 +1018,7 @@
       , `dept_select_${currentView}`);
 
       const renderLearnContent = () => renderTransitionWrapper(
-        <div className="flex flex-col h-full w-full max-w-5xl mx-auto">
+        <div className="flex flex-col flex-1 min-h-0 w-full max-w-5xl mx-auto">
           {renderTabSelector('bg-blue-600')}
 
           <div className="bg-slate-50 rounded-3xl p-4 md:p-8 border border-slate-100 shadow-inner flex flex-col flex-1 min-h-0">
@@ -956,35 +1027,35 @@
                 <span className="text-3xl md:text-4xl mr-2 animate-pop-in">{getDeptIcon(activeTab)}</span>
                 <span className="text-blue-600 mr-2">[{activeTab}]</span>문장 학습
               </h2>
-              <span className="text-sm md:text-base text-slate-500 font-bold bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm">
+              <span className="text-sm md:text-base text-slate-500 font-bold bg-white px-4 py-1.5 rounded-full border border-slate-200 shadow-sm shrink-0">
                 총 <span className="text-blue-600">{currentData.length}</span>개
               </span>
             </div>
 
-            <div className="overflow-y-auto custom-scrollbar pr-2 md:pr-4 space-y-4 flex-1">
+            <div className="overflow-y-auto custom-scrollbar pr-2 md:pr-4 space-y-4 flex-1 min-h-0">
               {currentData.length > 0 ? (
                 currentData.map((item) => (
-                  <div key={item.id} className="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 group">
-                    <div className="flex justify-between items-start md:items-center">
-                      <div className="flex-1">
+                  <div key={item.id} className="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 group w-full">
+                    <div className="flex justify-between items-start md:items-center w-full">
+                      <div className="flex-1 min-w-0">
                         <span className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs md:text-sm font-bold rounded-lg mb-3 border border-blue-100 break-keep">
                           {item.category}
                         </span>
                         <div className="mb-4">
-                          <h3 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight group-hover:text-blue-900 transition-colors break-keep leading-snug">
+                          <h3 className="text-2xl md:text-3xl font-black text-slate-800 tracking-tight group-hover:text-blue-900 transition-colors break-words whitespace-normal leading-snug w-full">
                             {item.term}
                           </h3>
                           {item.meaning && (
-                            <p className="text-sm md:text-base font-medium text-slate-500 leading-relaxed mt-2 break-keep">
+                            <p className="text-sm md:text-base font-medium text-slate-500 leading-relaxed mt-2 break-words whitespace-normal w-full">
                               {item.meaning}
                             </p>
                           )}
                         </div>
-                        <div className="bg-slate-50/80 rounded-xl p-4 border border-slate-100/80 group-hover:bg-blue-50/50 transition-colors">
-                          <p className="text-base md:text-lg font-bold text-teal-700 mb-2 break-keep">
+                        <div className="bg-slate-50/80 rounded-xl p-4 border border-slate-100/80 group-hover:bg-blue-50/50 transition-colors w-full">
+                          <p className="text-base md:text-lg font-bold text-teal-700 mb-2 break-words whitespace-normal w-full">
                             🇻🇳 {item.vi}
                           </p>
-                          <p className="text-sm md:text-base font-medium text-slate-500 italic break-keep">
+                          <p className="text-sm md:text-base font-medium text-slate-500 italic break-words whitespace-normal w-full">
                             🗣️ {item.pron}
                           </p>
                         </div>
@@ -1003,7 +1074,7 @@
                   </div>
                 ))
               ) : (
-                <div className="text-center py-10 text-slate-400 font-medium flex flex-col items-center justify-center h-full break-keep">
+                <div className="text-center py-10 text-slate-400 font-medium flex flex-col items-center justify-center h-full break-keep w-full">
                   <p>해당 부서의 학습 데이터가 아직 준비되지 않았습니다.</p>
                 </div>
               )}
@@ -1017,7 +1088,7 @@
 
         if (quizState === 'idle') {
           content = (
-            <div className="max-w-md w-full my-auto animate-fade-slide-up">
+            <div className="max-w-md w-full my-auto animate-fade-slide-up px-2">
               <div className="bg-teal-100 text-teal-600 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner text-5xl animate-pop-in">
                 {getDeptIcon(activeTab)}
               </div>
@@ -1025,11 +1096,11 @@
                 <span className="text-teal-600 mr-2">[{activeTab}]</span>랜덤 퀴즈
                 <span className="block text-lg font-bold text-slate-500 mt-2">Câu đố ngẫu nhiên</span>
               </h2>
-              <p className="text-slate-500 mb-10 text-sm md:text-base leading-relaxed break-keep">
-                들려주는 한국어 지시어를 듣고, 올바른 베트남어 뜻을 골라보세요.<br/>
-                <span className="text-xs md:text-sm font-normal opacity-80 mt-1 block">Nghe từ tiếng Hàn và chọn nghĩa tiếng Việt đúng.</span>
+              <p className="text-slate-500 mb-10 text-sm md:text-base leading-relaxed break-keep w-full">
+                들려주는 한국어 지시어를 듣고,<br/>올바른 베트남어 뜻을 골라보세요.<br/>
+                <span className="text-xs md:text-sm font-normal opacity-80 mt-1 block break-words whitespace-normal w-full">Nghe từ tiếng Hàn và chọn nghĩa tiếng Việt đúng.</span>
                 <strong className="text-teal-600 mt-3 block text-sm">매번 무작위로 10문제가 출제됩니다!</strong>
-                <span className="text-teal-600/80 text-xs block">10 câu hỏi ngẫu nhiên mỗi lần!</span>
+                <span className="text-teal-600/80 text-xs block break-words whitespace-normal w-full">10 câu hỏi ngẫu nhiên mỗi lần!</span>
               </p>
               <button onClick={startQuiz} className="w-full py-4 md:py-5 bg-teal-600 hover:bg-teal-700 text-white text-lg md:text-xl font-black rounded-2xl shadow-xl hover:shadow-2xl transition-all active:scale-95 break-keep">
                 퀴즈 시작하기
@@ -1040,37 +1111,37 @@
         } else if (quizState === 'playing' && quizQuestions.length > 0) {
           content = (
             <div className="max-w-2xl w-full flex flex-col flex-1 min-h-0 h-full animate-fade-slide-up">
-              <div className="flex justify-between items-center mb-3 md:mb-4 shrink-0 px-2 mt-1">
+              <div className="flex justify-between items-center mb-3 md:mb-4 shrink-0 px-2 mt-1 w-full">
                 <span className="text-teal-700 font-black text-base md:text-xl tracking-tight">Question {currentQuizIndex + 1} / {quizQuestions.length}</span>
-                <span className="text-slate-500 font-bold text-sm md:text-lg bg-white px-3 py-1 md:py-1.5 rounded-full shadow-sm border border-slate-200">
+                <span className="text-slate-500 font-bold text-sm md:text-lg bg-white px-3 py-1 md:py-1.5 rounded-full shadow-sm border border-slate-200 shrink-0">
                   Score <span className="text-teal-600 ml-1 text-lg md:text-xl">{quizScore}</span>
                 </span>
               </div>
 
-              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 mb-3 md:mb-4 shrink-0 relative overflow-hidden">
+              <div className="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 mb-3 md:mb-4 shrink-0 relative overflow-hidden w-full flex flex-col items-center">
                 <div className="absolute top-0 left-0 w-1.5 h-full bg-teal-500"></div>
-                <p className="text-xs md:text-sm text-slate-500 font-bold mb-2 md:mb-3 leading-relaxed break-keep text-center">
+                <p className="text-xs md:text-sm text-slate-500 font-bold mb-2 md:mb-3 leading-relaxed break-keep text-center w-full">
                   다음 지시어를 듣고 알맞은 의미를 고르시오.<br/>
-                  <span className="font-normal opacity-80">Nghe và chọn ý nghĩa phù hợp.</span>
+                  <span className="font-normal opacity-80 break-words whitespace-normal inline-block mt-1">Nghe và chọn ý nghĩa phù hợp.</span>
                 </p>
                 
-                <div className="flex flex-col items-center justify-center gap-2 md:gap-3 my-1">
+                <div className="flex flex-col items-center justify-center gap-2 md:gap-3 my-1 w-full">
                   <button 
                     onClick={() => playAudio(quizQuestions[currentQuizIndex].term)}
-                    className="w-12 h-12 md:w-16 md:h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center hover:bg-teal-600 hover:text-white shadow-sm hover:shadow-md transition-all transform hover:scale-105 border border-teal-200"
+                    className="w-12 h-12 md:w-16 md:h-16 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center hover:bg-teal-600 hover:text-white shadow-sm hover:shadow-md transition-all transform hover:scale-105 border border-teal-200 shrink-0"
                     title="소리 다시 듣기"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 md:h-8 md:w-8 ml-0.5 md:ml-1" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   </button>
-                  <h3 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight leading-snug break-keep text-center">
+                  <h3 className="text-xl md:text-3xl font-black text-slate-800 tracking-tight leading-snug break-words whitespace-normal text-center w-full px-2">
                     {quizQuestions[currentQuizIndex].term}
                   </h3>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 md:gap-3 flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 pb-2">
+              <div className="flex flex-col gap-2 md:gap-3 flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 pb-2 w-full">
                 {quizQuestions[currentQuizIndex].options.map((option, index) => {
                   let btnClass = "bg-white text-slate-700 border-slate-200 hover:border-teal-500 hover:bg-teal-50 hover:shadow-md";
                   
@@ -1089,10 +1160,10 @@
                       key={index}
                       onClick={() => handleAnswerSelect(option)}
                       disabled={selectedAnswer !== null}
-                      className={`p-3 md:p-4 text-left rounded-xl border-2 text-sm md:text-lg font-bold transition-all duration-200 flex items-center ${btnClass}`}
+                      className={`p-3 md:p-4 text-left rounded-xl border-2 text-sm md:text-lg font-bold transition-all duration-200 flex items-center w-full ${btnClass}`}
                     >
                       <span className="w-6 md:w-8 shrink-0 text-center opacity-60 mr-2 text-base md:text-xl">{index + 1}.</span> 
-                      <span className="leading-snug break-keep">{option.vi}</span>
+                      <span className="leading-snug break-words whitespace-normal w-full">{option.vi}</span>
                     </button>
                   );
                 })}
@@ -1101,8 +1172,8 @@
           );
         } else if (quizState === 'result') {
           content = (
-            <div className="max-w-md w-full my-auto animate-fade-slide-up">
-              <div className="w-28 h-28 md:w-32 md:h-32 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-inner animate-pop-in">
+            <div className="max-w-md w-full my-auto px-2 text-center overflow-y-auto custom-scrollbar py-4">
+              <div className="w-28 h-28 md:w-32 md:h-32 bg-yellow-100 text-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6 md:mb-8 shadow-inner animate-pop-in shrink-0">
                  <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 md:h-16 md:w-16" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1.323l3.954 1.582 1.599-.8a1 1 0 01.894 1.79l-1.233.616 1.738 5.42a1 1 0 01-.285 1.05A3.989 3.989 0 0115 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.715-5.349L11 6.477V16h2a1 1 0 110 2H7a1 1 0 110-2h2V6.477L6.237 7.582l1.715 5.349a1 1 0 01-.285 1.05A3.989 3.989 0 015 15a3.989 3.989 0 01-2.667-1.019 1 1 0 01-.285-1.05l1.738-5.42-1.233-.617a1 1 0 01.894-1.788l1.599.799L9 4.323V3a1 1 0 011-1zm-5 8.274l-.818 2.552c.25.112.526.174.818.174.292 0 .569-.062.818-.174L5 10.274zm10 0l-.818 2.552c.25.112.526.174.818.174.292 0 .569-.062.818-.174L15 10.274z" clipRule="evenodd" />
                 </svg>
@@ -1111,38 +1182,38 @@
               {quizScore === 10 ? (
                 <h2 className="text-3xl md:text-4xl font-black text-teal-600 mb-3 break-keep animate-pop-in">
                   🎉 만점 축하합니다! 🎉
-                  <span className="block text-lg font-bold text-teal-600/80 mt-2">Chúc mừng bạn đạt điểm tối đa!</span>
+                  <span className="block text-lg font-bold text-teal-600/80 mt-2 break-words whitespace-normal">Chúc mừng bạn đạt điểm tối đa!</span>
                 </h2>
               ) : (
                 <h2 className="text-3xl md:text-4xl font-black text-slate-800 mb-3 break-keep">
                   퀴즈 완료!
-                  <span className="block text-lg font-bold text-slate-500 mt-2">Hoàn thành!</span>
+                  <span className="block text-lg font-bold text-slate-500 mt-2 break-words whitespace-normal">Hoàn thành!</span>
                 </h2>
               )}
 
               <p className="text-lg md:text-xl text-slate-600 mb-8 md:mb-10 font-medium break-keep">
                 10문제 중 <span className="text-4xl font-black text-teal-600 mx-2">{quizScore}</span>문제를 맞췄습니다.
                 {quizScore === 10 && (
-                  <span className="block mt-2 text-teal-700 font-bold text-base md:text-lg animate-fade-in-up">
+                  <span className="block mt-2 text-teal-700 font-bold text-base md:text-lg animate-fade-in-up break-words whitespace-normal">
                     현장 문장을 완벽하게 마스터하셨네요! 👍
                   </span>
                 )}
               </p>
               
-              <div className="flex flex-col gap-3 md:gap-4 w-full">
+              <div className="flex flex-col gap-3 md:gap-4 w-full shrink-0">
                 {incorrectAnswers.length > 0 && (
                   <button onClick={() => setQuizState('review')} className="w-full py-4 bg-rose-500 hover:bg-rose-600 text-white font-bold text-lg rounded-2xl shadow-md transition-colors active:scale-95 break-keep">
                     틀린 문제 확인하기
-                    <span className="block text-sm font-normal opacity-90 mt-0.5">Xem lại câu sai</span>
+                    <span className="block text-sm font-normal opacity-90 mt-0.5 break-words whitespace-normal">Xem lại câu sai</span>
                   </button>
                 )}
                 
                 <div className="flex gap-3 md:gap-4 w-full">
                   <button onClick={startQuiz} className="flex-1 py-3 md:py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-base md:text-lg rounded-2xl shadow-md transition-colors active:scale-95 break-keep">
-                    다시 풀기<span className="block text-xs md:text-sm font-normal opacity-90 mt-0.5">Thử lại</span>
+                    다시 풀기<span className="block text-xs md:text-sm font-normal opacity-90 mt-0.5 break-words whitespace-normal">Thử lại</span>
                   </button>
                   <button onClick={() => setCurrentView('home')} className="flex-1 py-3 md:py-4 bg-white hover:bg-slate-50 text-slate-700 border-2 border-slate-200 font-bold text-base md:text-lg rounded-2xl shadow-sm transition-colors active:scale-95 break-keep">
-                    처음으로<span className="block text-xs md:text-sm font-normal opacity-70 mt-0.5">Về trang chủ</span>
+                    처음으로<span className="block text-xs md:text-sm font-normal opacity-70 mt-0.5 break-words whitespace-normal">Về trang chủ</span>
                   </button>
                 </div>
               </div>
@@ -1150,44 +1221,44 @@
           );
         } else if (quizState === 'review') {
           content = (
-            <div className="max-w-2xl w-full flex flex-col flex-1 min-h-0 h-full animate-fade-slide-up">
-              <div className="flex justify-between items-center mb-4 px-2 shrink-0 mt-2">
+            <div className="max-w-2xl w-full flex flex-col flex-1 min-h-0">
+              <div className="flex justify-between items-center mb-4 px-2 shrink-0 mt-2 w-full">
                 <h2 className="text-xl md:text-2xl font-black text-slate-800 text-left flex items-center">
                   <span className="text-rose-500 mr-2 animate-pop-in inline-block text-2xl">💡</span>
                   <div className="flex flex-col">
                     <span>오답 노트</span>
-                    <span className="text-sm font-bold text-slate-400">Ghi chú câu sai</span>
+                    <span className="text-sm font-bold text-slate-400 break-words whitespace-normal">Ghi chú câu sai</span>
                   </div>
                 </h2>
-                <span className="text-xs md:text-sm font-bold bg-rose-100 text-rose-600 px-3 py-1.5 rounded-full shadow-sm border border-rose-200 text-center">
+                <span className="text-xs md:text-sm font-bold bg-rose-100 text-rose-600 px-3 py-1.5 rounded-full shadow-sm border border-rose-200 text-center shrink-0">
                   틀린 문제: {incorrectAnswers.length}개<br/>
-                  <span className="opacity-80 scale-90 inline-block">Số câu sai: {incorrectAnswers.length}</span>
+                  <span className="opacity-80 scale-90 inline-block break-words whitespace-normal">Số câu sai: {incorrectAnswers.length}</span>
                 </span>
               </div>
 
-              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 space-y-4 mb-4 text-left pb-2">
+              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 space-y-4 mb-4 text-left pb-2 w-full">
                 {incorrectAnswers.map((item, idx) => (
-                  <div key={idx} className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-rose-300 transition-colors group">
-                    <div className="flex justify-between items-start">
+                  <div key={idx} className="bg-white p-5 md:p-6 rounded-2xl border border-slate-200 shadow-sm hover:border-rose-300 transition-colors group w-full">
+                    <div className="flex justify-between items-start w-full">
                       <div className="flex-1 min-w-0">
-                        <span className="inline-block px-2.5 py-1 bg-rose-50 text-rose-600 text-xs md:text-sm font-bold rounded-lg mb-3 border border-rose-100">
+                        <span className="inline-block px-2.5 py-1 bg-rose-50 text-rose-600 text-xs md:text-sm font-bold rounded-lg mb-3 border border-rose-100 break-words whitespace-normal">
                           {item.category}
                         </span>
-                        <div className="mb-4">
-                          <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight break-keep">
+                        <div className="mb-4 w-full">
+                          <h3 className="text-xl md:text-2xl font-black text-slate-800 tracking-tight break-words whitespace-normal w-full">
                             {item.term}
                           </h3>
                           {item.meaning && (
-                            <p className="text-sm md:text-base font-medium text-slate-500 mt-2 break-keep">
+                            <p className="text-sm md:text-base font-medium text-slate-500 mt-2 break-words whitespace-normal w-full">
                               {item.meaning}
                             </p>
                           )}
                         </div>
-                        <div className="bg-slate-50/80 rounded-xl p-4 border border-slate-100/80 group-hover:bg-rose-50/30 transition-colors">
-                          <p className="text-base md:text-lg font-bold text-teal-700 mb-2 break-keep">
+                        <div className="bg-slate-50/80 rounded-xl p-4 border border-slate-100/80 group-hover:bg-rose-50/30 transition-colors w-full">
+                          <p className="text-base md:text-lg font-bold text-teal-700 mb-2 break-words whitespace-normal w-full">
                             🇻🇳 {item.vi}
                           </p>
-                          <p className="text-sm md:text-base font-medium text-slate-500 italic break-keep">
+                          <p className="text-sm md:text-base font-medium text-slate-500 italic break-words whitespace-normal w-full">
                             🗣️ {item.pron}
                           </p>
                         </div>
@@ -1206,12 +1277,12 @@
                 ))}
               </div>
 
-              <div className="shrink-0 flex gap-3 pb-2">
+              <div className="shrink-0 flex gap-3 pb-2 w-full">
                 <button onClick={() => setQuizState('result')} className="flex-1 py-3 md:py-4 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-sm md:text-base rounded-2xl transition-colors active:scale-95 break-keep">
-                  결과화면으로<br/><span className="font-normal opacity-80 text-xs">Quay lại kết quả</span>
+                  결과화면으로<br/><span className="font-normal opacity-80 text-xs break-words whitespace-normal mt-0.5 inline-block">Quay lại kết quả</span>
                 </button>
                 <button onClick={startQuiz} className="flex-1 py-3 md:py-4 bg-teal-600 hover:bg-teal-700 text-white font-bold text-sm md:text-base rounded-2xl shadow-md transition-colors active:scale-95 break-keep">
-                  다시 풀기<br/><span className="font-normal opacity-80 text-xs">Thử lại</span>
+                  다시 풀기<br/><span className="font-normal opacity-80 text-xs break-words whitespace-normal mt-0.5 inline-block">Thử lại</span>
                 </button>
               </div>
             </div>
@@ -1219,40 +1290,49 @@
         }
 
         return renderTransitionWrapper(
-          <div className="bg-slate-50 rounded-3xl p-4 md:p-8 border border-slate-100 shadow-inner flex flex-col items-center justify-center flex-1 min-h-0 text-center w-full">
-            {content}
+          <div className="flex flex-col flex-1 min-h-0 w-full max-w-5xl mx-auto">
+            {renderTabSelector('bg-teal-600')}
+            <div className="bg-slate-50 rounded-3xl p-4 md:p-8 border border-slate-100 shadow-inner flex flex-col items-center justify-center flex-1 min-h-0 text-center w-full">
+              {content}
+            </div>
           </div>
         , `quiz_${quizState}_${activeTab}`);
       };
 
       return (
-        <div className="min-h-[100dvh] flex flex-col items-center justify-start py-4 md:py-10 px-2 md:px-4 bg-slate-50">
+        <div 
+          className="min-h-[100dvh] flex flex-col items-center justify-start py-4 md:py-10 px-2 md:px-4 bg-slate-50 w-full"
+          style={{ fontFamily: "'HD체', 'Hyundai Sans', sans-serif" }}
+        >
           <div className="fixed top-0 left-0 w-full h-1.5 md:h-2 bg-gradient-to-r from-blue-700 to-teal-500 shadow-sm z-50"></div>
           
           {/* 헤더 및 뒤로가기 제어 */}
-          <div className="w-full max-w-5xl flex justify-between items-center mb-3 md:mb-6 px-2 z-40 mt-1 md:mt-0">
-            {currentView !== 'home' ? (
+          {currentView !== 'home' && (
+            <div className="w-full max-w-5xl flex justify-between items-center mb-3 md:mb-6 px-2 z-40 mt-1 md:mt-0 shrink-0">
               <button 
                 onClick={handleBack} 
                 className="bg-white/90 backdrop-blur-sm p-2 md:p-3 pr-3 md:pr-5 rounded-full shadow-sm border border-slate-200 text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-all flex items-center active:scale-95 shrink-0"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-6 md:w-6 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
-                <div className="flex flex-col items-start leading-none gap-0.5">
-                  <span className="font-bold text-xs md:text-base">뒤로</span>
-                  <span className="font-normal text-[9px] md:text-xs opacity-70">Quay lại</span>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 md:h-6 md:w-6 mr-1 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                <div className="flex flex-col items-start leading-none gap-0.5 shrink-0">
+                  <span className="font-bold text-xs md:text-base whitespace-nowrap">뒤로</span>
+                  <span className="font-normal text-[9px] md:text-xs opacity-70 whitespace-nowrap">Quay lại</span>
                 </div>
               </button>
-            ) : <div className="w-16 md:w-20 shrink-0"></div>}
 
-            <h1 className="text-xl sm:text-2xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-950 to-blue-700 tracking-tight cursor-pointer break-keep text-center animate-fade-slide-up leading-tight" onClick={() => setCurrentView('home')}>
-              삼호 Yard 한국어
-            </h1>
-            
-            <div className="w-16 md:w-20 shrink-0"></div>
-          </div>
+              <div className="flex flex-col items-center justify-center w-full cursor-pointer animate-fade-slide-up group" onClick={() => setCurrentView('home')}>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight break-keep text-center leading-tight transition-transform duration-300 group-hover:scale-105 flex items-center justify-center">
+                  <span className="neon-title pb-1">삼호 Yard 한국어</span>
+                </h1>
+                <div className="h-1 w-16 sm:w-24 bg-gradient-to-r from-blue-600 to-teal-400 rounded-full mt-0.5 opacity-80 shadow-[0_0_10px_rgba(45,212,191,0.6)] group-hover:w-28 transition-all duration-300"></div>
+              </div>
+              
+              <div className="w-16 md:w-20 shrink-0"></div>
+            </div>
+          )}
 
-          <div className="w-full max-w-5xl relative bg-white/90 backdrop-blur-md shadow-xl shadow-slate-200/50 rounded-2xl md:rounded-[2.5rem] border border-white flex flex-col flex-1 max-h-[90dvh] md:max-h-[85vh] overflow-hidden mt-2 md:mt-0">
-            <div className="flex-1 min-h-0 relative p-3 sm:p-4 md:p-8 flex flex-col">
+          <div className={`w-full max-w-5xl relative bg-white/90 backdrop-blur-md shadow-xl shadow-slate-200/50 rounded-2xl md:rounded-[2.5rem] border border-white flex flex-col flex-1 min-h-0 overflow-hidden ${currentView === 'home' ? 'bg-transparent shadow-none border-none' : 'max-h-[90dvh] md:max-h-[85vh] mt-2 md:mt-0'}`}>
+            <div className={`flex-1 min-h-0 relative flex flex-col w-full ${currentView === 'home' ? 'p-0' : 'p-3 sm:p-4 md:p-8'}`}>
               {currentView === 'home' && renderHome()}
               
               {currentView === 'learn' && viewStep === 'dept_select' && renderDeptSelect()}
