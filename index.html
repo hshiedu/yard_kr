@@ -1630,76 +1630,134 @@
  
 
       const startLearn = () => {
+
         unlockAudio();
+
         setActiveDept(selDeptPop); setSelDeptPop(null); setSearchQuery(''); setView('learn');
+
       };
+
+
+ 
 
       const startQuizSession = () => {
+
         unlockAudio();
+
         const d = parsedData[selDeptPop || activeDept] || [];
+
         if (d.length < 4) {
+
           alert("데이터가 부족합니다.");
+
           return;
+
         }
-        
+
+       
+
         const shuffled = [...d].sort(() => Math.random() - 0.5).slice(0, 20);
+
         const items = shuffled.map(q => {
+
           const others = d.filter(x => x.id !== q.id).sort(() => Math.random() - 0.5).slice(0, 3);
+
           return { ...q, opts: [q, ...others].sort(() => Math.random() - 0.5) };
+
         });
-        
+
+       
+
         if (selDeptPop) setActiveDept(selDeptPop);
+
         setSelDeptPop(null);
+
         setQuizItems(items); setQIdx(0); setScore(0); setQState('play'); setAns(null);
+
         setIncorrectAnswers([]);
+
         setView('quiz');
-        
+
+       
+
         setTimeout(() => { playSequence(items[0].term, 1); }, 1000);
+
       };
 
-      // ---------------------------------------------------------
-      // 📱 [업그레이드] 스마트폰 '뒤로 가기' 누를 때 팝업 우선 제어 로직
-      // ---------------------------------------------------------
-      const viewRef = useRef(view);
-      const selDeptPopRef = useRef(selDeptPop);
-      const selTermDetailRef = useRef(selTermDetail);
 
-      useEffect(() => { viewRef.current = view; }, [view]);
-      useEffect(() => { selDeptPopRef.current = selDeptPop; }, [selDeptPop]);
-      useEffect(() => { selTermDetailRef.current = selTermDetail; }, [selTermDetail]);
+ 
 
-      useEffect(() => {
-        window.history.pushState(null, '', window.location.href);
+      const handleAns = (o) => {
 
-        const handlePopState = () => {
-          window.history.pushState(null, '', window.location.href);
+        if (ans) return;
 
-          // 1순위: 상세 설명 팝업이 열려있으면 그것만 닫기
-          if (selTermDetailRef.current) {
-            setSelTermDetail(null);
-            return;
+        setAns(o);
+
+        const currentQ = quizItems[qIdx];
+
+        const isCorrect = o.id === currentQ.id;
+
+
+ 
+
+        if (isCorrect) {
+
+          setScore(s => s + 1);
+
+        } else {
+
+          setIncorrectAnswers(prev => [...prev, { ...currentQ, userAns: o }]);
+
+        }
+
+       
+
+        setTimeout(() => {
+
+          if (qIdx < quizItems.length - 1) {
+
+            const nextIdx = qIdx + 1;
+
+            setQIdx(nextIdx);
+
+            setAns(null);
+
+            setTimeout(() => { playSequence(quizItems[nextIdx].term, 1); }, 1000);
+
+          } else {
+
+            setQState('result');
+
+            setScore(latestScore => {
+
+              setHighScores(prev => {
+
+                const newScores = { ...prev };
+
+                const currentHigh = newScores[activeDept] || 0;
+
+                if (latestScore > currentHigh) {
+
+                  newScores[activeDept] = latestScore;
+
+                  try { localStorage.setItem('hd_highscores', JSON.stringify(newScores)); } catch(e){}
+
+                }
+
+                return newScores;
+
+              });
+
+              return latestScore;
+
+            });
+
           }
-          // 2순위: 부서 선택 팝업(시작/닫기 창)이 열려있으면 그것만 닫기
-          if (selDeptPopRef.current) {
-            setSelDeptPop(null);
-            return;
-          }
-          // 3순위: 학습/퀴즈 화면이면 부서 선택 목록으로 이동
-          if (viewRef.current === 'learn' || viewRef.current === 'quiz') {
-            stopAudio();
-            setView('select');
-            return;
-          }
-          // 4순위: 부서 선택 목록이면 홈으로 이동
-          if (viewRef.current === 'select') {
-            setView('home');
-            return;
-          }
-        };
 
-        window.addEventListener('popstate', handlePopState);
-        return () => window.removeEventListener('popstate', handlePopState);
-      }, []);
+        }, 1200);
+
+      };
+
 
  
 
