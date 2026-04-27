@@ -1321,184 +1321,158 @@
     })();
 
 
- // 🔥 실제 음성 재생 + 실패 시 기계음(TTS) 대체 하이브리드 로직
+ 
+
     const useAudio = () => {
+
       const [playing, setPlaying] = useState(false);
+
       const [currentText, setCurrentText] = useState(null);
+
       const timerRef = useRef(null);
+
       const currentReqRef = useRef(0);
-      const audioRef = useRef(null);
-
-      // 🛑 알려주신 깃허브 저장소의 주소입니다.
-      // 만약 깃허브에 'mp3' 라는 폴더를 만들어서 넣으셨다면,
-      // "https://raw.githubusercontent.com/hshiedu/yard_kr/main/mp3/" 이렇게 끝에 폴더이름을 적어주세요.
-      const GITHUB_BASE_URL = "https://raw.githubusercontent.com/hshiedu/yard_kr/main/";
-
-      const stop = () => {
-        currentReqRef.current += 1;
-        if (timerRef.current) clearTimeout(timerRef.current);
-        
-        // 1. 실제 오디오 정지
-        if (audioRef.current) {
-          audioRef.current.pause();
-          audioRef.current.currentTime = 0;
-        }
-        // 2. 기계음(TTS) 정지
-        try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
-        
-        setPlaying(false);
-        setCurrentText(null);
-      };
-
-      const playSequence = async (text, times = 3) => {
-        stop();
-
-        const reqId = currentReqRef.current;
-        setPlaying(true);
-        setCurrentText(text);
-
-        const playOnce = () => new Promise((resolve) => {
-          if (currentReqRef.current !== reqId) return resolve();
-
-          // 🚨 [대체 플랜] 기계음(TTS) 재생 함수 (파일이 없을 때 대신 읽어주는 로봇)
-          const fallbackToTTS = () => {
-            if (currentReqRef.current !== reqId) return resolve();
-            try {
-              if(window.speechSynthesis) window.speechSynthesis.cancel();
-              const utterance = new SpeechSynthesisUtterance(text);
-              utterance.lang = 'ko-KR';
-              utterance.rate = 0.85;
-              utterance.onend = resolve;
-              utterance.onerror = resolve;
-              window.speechSynthesis.speak(utterance);
-            } catch(e) {
-              resolve();
-            }
-          };
-
-          // 🎯 [메인 플랜] 깃허브 MP3 파일 재생 시도
-          try {
-            // 한글 파일 이름(예: 단도리 해.mp3)을 인터넷 주소로 변환
-            const fileName = encodeURIComponent(text) + ".mp3"; 
-            const audioUrl = GITHUB_BASE_URL + fileName;
-            
-            const audio = new Audio(audioUrl);
-            audioRef.current = audio;
-
-            // MP3 파일 정상 재생 완료 시
-            audio.onended = resolve;
-
-            // ❌ MP3 파일이 깃허브에 없거나 에러 발생 시 -> 로봇 기계음으로 넘김
-            audio.onerror = () => {
-              console.log(`[파일 없음] '${text}' 파일이 깃허브에 없어서 로봇 소리로 대신 읽습니다.`);
-              fallbackToTTS();
-            };
-
-            // 재생 시작
-            const playPromise = audio.play();
-            if (playPromise !== undefined) {
-              playPromise.catch(e => {
-                fallbackToTTS();
-              });
-            }
-          } catch(e) {
-            fallbackToTTS();
-          }
-        });
-
-        // 지정된 횟수만큼 반복 재생 (기본 3번)
-        for (let i = 0; i < times; i++) {
-          if (currentReqRef.current !== reqId) break;
-          await playOnce();
-          // 재생 간 1초 대기 (쉬는 시간)
-          if (i < times - 1 && currentReqRef.current === reqId) {
-            await new Promise(r => { timerRef.current = setTimeout(r, 1000); });
-          }
-        }
-        
-        if (currentReqRef.current === reqId) {
-          setPlaying(false);
-          setCurrentText(null);
-        }
-      };
-
-      useEffect(() => { return () => stop(); }, []);
-      return { playSequence, stop, playing, currentText };
-    };
-
 
 
  
-function App() {
+
+      const stop = () => {
+
+        currentReqRef.current += 1;
+
+        if (timerRef.current) clearTimeout(timerRef.current);
+
+        try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
+
+        setPlaying(false);
+
+        setCurrentText(null);
+
+      };
+
+
+ 
+
+      const playSequence = async (text, times = 3) => {
+
+        stop();
+
+
+        const reqId = currentReqRef.current;
+
+        setPlaying(true);
+
+        setCurrentText(text);
+
+
+ 
+
+        const speakOnce = () => new Promise((resolve) => {
+
+          if (currentReqRef.current !== reqId) return resolve();
+
+          try {
+
+            if(window.speechSynthesis) window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+
+            utterance.lang = 'ko-KR';
+
+            utterance.rate = 0.85;
+
+            utterance.onend = resolve;
+
+            utterance.onerror = resolve;
+
+            window.speechSynthesis.speak(utterance);
+
+          } catch(e) {
+
+            resolve();
+
+          }
+
+        });
+
+
+ 
+
+        for (let i = 0; i < times; i++) {
+
+          if (currentReqRef.current !== reqId) break;
+
+          await speakOnce();
+
+          if (i < times - 1 && currentReqRef.current === reqId) {
+
+            await new Promise(r => { timerRef.current = setTimeout(r, 1000); });
+
+          }
+
+        }
+
+       
+
+        if (currentReqRef.current === reqId) {
+
+          setPlaying(false);
+
+          setCurrentText(null);
+
+        }
+
+      };
+
+
+ 
+
+      useEffect(() => { return () => stop(); }, []);
+
+      return { playSequence, stop, playing, currentText };
+
+    };
+
+
+ 
+
+    function App() {
+
       const [lang, setLang] = useState('vi');
+
       const [view, setView] = useState('home');
+
       const [activeDept, setActiveDept] = useState('');
+
       const [selDeptPop, setSelDeptPop] = useState(null);
+
       const [selTermDetail, setSelTermDetail] = useState(null);
-      
+
+     
+
       const [quizItems, setQuizItems] = useState([]);
+
       const [qIdx, setQIdx] = useState(0);
+
       const [score, setScore] = useState(0);
+
       const [qState, setQState] = useState('idle');
+
       const [ans, setAns] = useState(null);
 
+
+ 
+
       const [searchQuery, setSearchQuery] = useState('');
+
       const [highScores, setHighScores] = useState({});
+
       const [learnedItems, setLearnedItems] = useState([]);
+
       const [incorrectAnswers, setIncorrectAnswers] = useState([]);
 
-      const { playSequence, stop: stopAudio, playing, currentText } = useAudio();
-      const t = uiText[lang] || uiText['ko'];
-      const data = parsedData[activeDept] || [];
-      const scrollRef = useRef(null);
 
-      // 📱 현재 화면과 팝업 상태를 실시간으로 추적하는 메모리 장치 (새로 추가됨)
-      const viewRef = useRef(view);
-      const selDeptPopRef = useRef(selDeptPop);
-      const selTermDetailRef = useRef(selTermDetail);
-
-      useEffect(() => { viewRef.current = view; }, [view]);
-      useEffect(() => { selDeptPopRef.current = selDeptPop; }, [selDeptPop]);
-      useEffect(() => { selTermDetailRef.current = selTermDetail; }, [selTermDetail]);
-
-      // 📱 스마트폰 하드웨어 '뒤로 가기' 완벽 제어 (팝업 닫기 기능 포함)
-      useEffect(() => {
-        window.history.pushState(null, '', window.location.href);
-
-        const handlePopState = () => {
-          // 앱이 꺼지지 않게 가짜 페이지를 다시 끼워넣음
-          window.history.pushState(null, '', window.location.href);
-
-          // 1. 상세 설명 팝업이 열려있으면 그것만 닫기
-          if (selTermDetailRef.current) {
-            setSelTermDetail(null);
-            return;
-          }
-          // 2. 부서 선택 팝업이 열려있으면 그것만 닫기 (사진 속 그 화면)
-          if (selDeptPopRef.current) {
-            setSelDeptPop(null);
-            return;
-          }
-          // 3. 학습/퀴즈 화면이면 목록 화면으로 이동
-          if (viewRef.current === 'learn' || viewRef.current === 'quiz') {
-            stopAudio();
-            setView('select');
-            return;
-          }
-          // 4. 목록 화면이면 홈 화면으로 이동
-          if (viewRef.current === 'select') {
-            setView('home');
-            return;
-          }
-        };
-
-        window.addEventListener('popstate', handlePopState);
-        return () => window.removeEventListener('popstate', handlePopState);
-      }, []);
-
-      // 데이터가 아예 없을 때 띄우는 친절한 오류 안내
-      if (!window.HD_DATA || window.HD_DATA.length === 0) {
-    
+ 
 
       const { playSequence, stop: stopAudio, playing, currentText } = useAudio();
 
@@ -1614,53 +1588,80 @@ function App() {
       const openDeptInfo = (dept) => { setSelDeptPop(dept); };
 
      
-const unlockAudio = () => {
+
+      const unlockAudio = () => {
+
         try {
+
           const u = new SpeechSynthesisUtterance('');
+
           u.volume = 0;
+
           if(window.speechSynthesis) window.speechSynthesis.speak(u);
+
         } catch(e) {}
+
       };
 
-      // 📱 전체화면 강제 실행 함수 (필요할 때를 대비해 기능 자체는 남겨두었습니다)
-      const forceFullScreen = () => {
-        try {
-          if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
-            document.documentElement.requestFullscreen().catch(e => console.log(e));
-          }
-        } catch(e) {}
-      };
+
+ 
 
       const startLearn = () => {
+
         unlockAudio();
-        // 💡 전체화면 실행 코드 제거됨
+
         setActiveDept(selDeptPop); setSelDeptPop(null); setSearchQuery(''); setView('learn');
+
       };
 
+
+ 
+
       const startQuizSession = () => {
+
         unlockAudio();
-        // 💡 전체화면 실행 코드 제거됨
+
         const d = parsedData[selDeptPop || activeDept] || [];
+
         if (d.length < 4) {
+
           alert("데이터가 부족합니다.");
+
           return;
+
         }
-        
+
+       
+
         const shuffled = [...d].sort(() => Math.random() - 0.5).slice(0, 20);
+
         const items = shuffled.map(q => {
+
           const others = d.filter(x => x.id !== q.id).sort(() => Math.random() - 0.5).slice(0, 3);
+
           return { ...q, opts: [q, ...others].sort(() => Math.random() - 0.5) };
+
         });
-        
+
+       
+
         if (selDeptPop) setActiveDept(selDeptPop);
+
         setSelDeptPop(null);
+
         setQuizItems(items); setQIdx(0); setScore(0); setQState('play'); setAns(null);
+
         setIncorrectAnswers([]);
+
         setView('quiz');
-        
+
+       
+
         setTimeout(() => { playSequence(items[0].term, 1); }, 1000);
+
       };
-   
+
+
  
 
       const handleAns = (o) => {
