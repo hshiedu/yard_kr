@@ -1429,70 +1429,76 @@
 
 
  
-
-    function App() {
-
+function App() {
       const [lang, setLang] = useState('vi');
-
       const [view, setView] = useState('home');
-
       const [activeDept, setActiveDept] = useState('');
-
       const [selDeptPop, setSelDeptPop] = useState(null);
-
       const [selTermDetail, setSelTermDetail] = useState(null);
-
-     
-
+      
       const [quizItems, setQuizItems] = useState([]);
-
       const [qIdx, setQIdx] = useState(0);
-
       const [score, setScore] = useState(0);
-
       const [qState, setQState] = useState('idle');
-
       const [ans, setAns] = useState(null);
 
-
- 
-
       const [searchQuery, setSearchQuery] = useState('');
-
       const [highScores, setHighScores] = useState({});
-
       const [learnedItems, setLearnedItems] = useState([]);
-
       const [incorrectAnswers, setIncorrectAnswers] = useState([]);
 
+      const { playSequence, stop: stopAudio, playing, currentText } = useAudio();
+      const t = uiText[lang] || uiText['ko'];
+      const data = parsedData[activeDept] || [];
+      const scrollRef = useRef(null);
 
+      // 📱 현재 화면과 팝업 상태를 실시간으로 추적하는 메모리 장치 (새로 추가됨)
+      const viewRef = useRef(view);
+      const selDeptPopRef = useRef(selDeptPop);
+      const selTermDetailRef = useRef(selTermDetail);
 
+      useEffect(() => { viewRef.current = view; }, [view]);
+      useEffect(() => { selDeptPopRef.current = selDeptPop; }, [selDeptPop]);
+      useEffect(() => { selTermDetailRef.current = selTermDetail; }, [selTermDetail]);
 
-// 📱 스마트폰 하드웨어 '뒤로 가기' 버튼 튕김 방지 로직
+      // 📱 스마트폰 하드웨어 '뒤로 가기' 완벽 제어 (팝업 닫기 기능 포함)
       useEffect(() => {
-        // 앱에 들어오면 브라우저 기록에 가짜 페이지를 하나 끼워 넣습니다.
         window.history.pushState(null, '', window.location.href);
 
         const handlePopState = () => {
-          // 뒤로 가기를 눌러도 앱이 꺼지지 않게 가짜 페이지를 다시 끼워 넣습니다.
+          // 앱이 꺼지지 않게 가짜 페이지를 다시 끼워넣음
           window.history.pushState(null, '', window.location.href);
 
-          // 현재 화면에 따라 안전하게 이전 화면으로 돌려보냅니다.
-          setView(prevView => {
-            if (prevView === 'learn' || prevView === 'quiz') {
-              stopAudio(); // 말하는 중이면 멈춤
-              return 'select';
-            }
-            if (prevView === 'select') return 'home';
-            return 'home';
-          });
+          // 1. 상세 설명 팝업이 열려있으면 그것만 닫기
+          if (selTermDetailRef.current) {
+            setSelTermDetail(null);
+            return;
+          }
+          // 2. 부서 선택 팝업이 열려있으면 그것만 닫기 (사진 속 그 화면)
+          if (selDeptPopRef.current) {
+            setSelDeptPop(null);
+            return;
+          }
+          // 3. 학습/퀴즈 화면이면 목록 화면으로 이동
+          if (viewRef.current === 'learn' || viewRef.current === 'quiz') {
+            stopAudio();
+            setView('select');
+            return;
+          }
+          // 4. 목록 화면이면 홈 화면으로 이동
+          if (viewRef.current === 'select') {
+            setView('home');
+            return;
+          }
         };
 
-        // 뒤로 가기 버튼을 감시하는 기능 켜기
         window.addEventListener('popstate', handlePopState);
         return () => window.removeEventListener('popstate', handlePopState);
       }, []);
- 
+
+      // 데이터가 아예 없을 때 띄우는 친절한 오류 안내
+      if (!window.HD_DATA || window.HD_DATA.length === 0) {
+    
 
       const { playSequence, stop: stopAudio, playing, currentText } = useAudio();
 
