@@ -1466,6 +1466,32 @@
       const [incorrectAnswers, setIncorrectAnswers] = useState([]);
 
 
+
+
+// 📱 스마트폰 하드웨어 '뒤로 가기' 버튼 튕김 방지 로직
+      useEffect(() => {
+        // 앱에 들어오면 브라우저 기록에 가짜 페이지를 하나 끼워 넣습니다.
+        window.history.pushState(null, '', window.location.href);
+
+        const handlePopState = () => {
+          // 뒤로 가기를 눌러도 앱이 꺼지지 않게 가짜 페이지를 다시 끼워 넣습니다.
+          window.history.pushState(null, '', window.location.href);
+
+          // 현재 화면에 따라 안전하게 이전 화면으로 돌려보냅니다.
+          setView(prevView => {
+            if (prevView === 'learn' || prevView === 'quiz') {
+              stopAudio(); // 말하는 중이면 멈춤
+              return 'select';
+            }
+            if (prevView === 'select') return 'home';
+            return 'home';
+          });
+        };
+
+        // 뒤로 가기 버튼을 감시하는 기능 켜기
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+      }, []);
  
 
       const { playSequence, stop: stopAudio, playing, currentText } = useAudio();
@@ -1583,78 +1609,52 @@
 
      
 
-      const unlockAudio = () => {
-
+   const unlockAudio = () => {
         try {
-
           const u = new SpeechSynthesisUtterance('');
-
           u.volume = 0;
-
           if(window.speechSynthesis) window.speechSynthesis.speak(u);
-
         } catch(e) {}
-
       };
 
-
- 
+      // 📱 전체화면 강제 실행 함수 (네비게이션 바 숨기기)
+      const forceFullScreen = () => {
+        try {
+          if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
+            document.documentElement.requestFullscreen().catch(e => console.log(e));
+          }
+        } catch(e) {}
+      };
 
       const startLearn = () => {
-
         unlockAudio();
-
+        forceFullScreen(); // 💡 시작할 때 전체화면 실행하여 네비게이션 바 숨김
         setActiveDept(selDeptPop); setSelDeptPop(null); setSearchQuery(''); setView('learn');
-
       };
-
-
- 
 
       const startQuizSession = () => {
-
         unlockAudio();
-
+        forceFullScreen(); // 💡 시작할 때 전체화면 실행하여 네비게이션 바 숨김
         const d = parsedData[selDeptPop || activeDept] || [];
-
         if (d.length < 4) {
-
           alert("데이터가 부족합니다.");
-
           return;
-
         }
-
-       
-
+        
         const shuffled = [...d].sort(() => Math.random() - 0.5).slice(0, 20);
-
         const items = shuffled.map(q => {
-
           const others = d.filter(x => x.id !== q.id).sort(() => Math.random() - 0.5).slice(0, 3);
-
           return { ...q, opts: [q, ...others].sort(() => Math.random() - 0.5) };
-
         });
-
-       
-
+        
         if (selDeptPop) setActiveDept(selDeptPop);
-
         setSelDeptPop(null);
-
         setQuizItems(items); setQIdx(0); setScore(0); setQState('play'); setAns(null);
-
         setIncorrectAnswers([]);
-
         setView('quiz');
-
-       
-
+        
         setTimeout(() => { playSequence(items[0].term, 1); }, 1000);
-
-      };
-
+      };   
 
  
 
