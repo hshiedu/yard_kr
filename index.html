@@ -1608,8 +1608,7 @@
       const openDeptInfo = (dept) => { setSelDeptPop(dept); };
 
      
-
-   const unlockAudio = () => {
+const unlockAudio = () => {
         try {
           const u = new SpeechSynthesisUtterance('');
           u.volume = 0;
@@ -1617,7 +1616,7 @@
         } catch(e) {}
       };
 
-      // 📱 전체화면 강제 실행 함수 (네비게이션 바 숨기기)
+      // 📱 전체화면 강제 실행 함수 (필요할 때를 대비해 기능 자체는 남겨두었습니다)
       const forceFullScreen = () => {
         try {
           if (!document.fullscreenElement && document.documentElement.requestFullscreen) {
@@ -1628,13 +1627,13 @@
 
       const startLearn = () => {
         unlockAudio();
-        forceFullScreen(); // 💡 시작할 때 전체화면 실행하여 네비게이션 바 숨김
+        // 💡 전체화면 실행 코드 제거됨
         setActiveDept(selDeptPop); setSelDeptPop(null); setSearchQuery(''); setView('learn');
       };
 
       const startQuizSession = () => {
         unlockAudio();
-        forceFullScreen(); // 💡 시작할 때 전체화면 실행하여 네비게이션 바 숨김
+        // 💡 전체화면 실행 코드 제거됨
         const d = parsedData[selDeptPop || activeDept] || [];
         if (d.length < 4) {
           alert("데이터가 부족합니다.");
@@ -1654,8 +1653,8 @@
         setView('quiz');
         
         setTimeout(() => { playSequence(items[0].term, 1); }, 1000);
-      };   
-
+      };
+   
  
 
       const handleAns = (o) => {
