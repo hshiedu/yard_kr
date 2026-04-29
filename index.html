@@ -1323,116 +1323,98 @@
 
  
 
+// 🔥 깃허브 오디오 재생 + 실패 시 기계음(TTS) 대체 완벽 기능!
     const useAudio = () => {
-
       const [playing, setPlaying] = useState(false);
-
       const [currentText, setCurrentText] = useState(null);
-
       const timerRef = useRef(null);
-
       const currentReqRef = useRef(0);
+      const audioRef = useRef(null);
 
-
- 
+      // ⭐️ 깃허브 베이스 URL (여기 주소가 있어야 깃허브랑 연결됩니다!)
+      const GITHUB_BASE_URL = "https://raw.githubusercontent.com/hshiedu/yard_kr/main/audio/";
 
       const stop = () => {
-
         currentReqRef.current += 1;
-
         if (timerRef.current) clearTimeout(timerRef.current);
-
+        if (audioRef.current) {
+          audioRef.current.pause();
+          audioRef.current.currentTime = 0;
+        }
         try { if(window.speechSynthesis) window.speechSynthesis.cancel(); } catch(e) {}
-
         setPlaying(false);
-
         setCurrentText(null);
-
       };
-
-
- 
 
       const playSequence = async (text, times = 3) => {
-
         stop();
-
-
         const reqId = currentReqRef.current;
-
         setPlaying(true);
-
         setCurrentText(text);
 
-
- 
-
-        const speakOnce = () => new Promise((resolve) => {
-
+        const playOnce = () => new Promise((resolve) => {
           if (currentReqRef.current !== reqId) return resolve();
 
+          // 깃허브 파일이 없거나 오류날 때 실행되는 로봇음(TTS) 함수
+          const fallbackToTTS = () => {
+            if (currentReqRef.current !== reqId) return resolve();
+            try {
+              if(window.speechSynthesis) window.speechSynthesis.cancel();
+              const utterance = new SpeechSynthesisUtterance(text);
+              utterance.lang = 'ko-KR';
+              utterance.rate = 0.85;
+              utterance.onend = resolve;
+              utterance.onerror = resolve;
+              window.speechSynthesis.speak(utterance);
+            } catch(e) {
+              resolve();
+            }
+          };
+
           try {
+            // 텍스트를 파일명으로 바꿔서 깃허브 주소 만들기 (예: "안전화 신어.mp3")
+            const fileName = encodeURIComponent(text) + ".mp3"; 
+            const audioUrl = GITHUB_BASE_URL + fileName;
+            const audio = new Audio(audioUrl);
+            audioRef.current = audio;
 
-            if(window.speechSynthesis) window.speechSynthesis.cancel();
+            audio.onended = resolve;
+            
+            // ⭐️ 깃허브에 파일이 없으면 에러가 나면서 로봇음으로 넘어갑니다
+            audio.onerror = () => {
+              console.log(`[오디오 파일 없음] ${text} -> 기계음으로 대체`);
+              fallbackToTTS();
+            };
 
-            const utterance = new SpeechSynthesisUtterance(text);
-
-            utterance.lang = 'ko-KR';
-
-            utterance.rate = 0.85;
-
-            utterance.onend = resolve;
-
-            utterance.onerror = resolve;
-
-            window.speechSynthesis.speak(utterance);
-
+            const playPromise = audio.play();
+            if (playPromise !== undefined) {
+              playPromise.catch(e => {
+                fallbackToTTS();
+              });
+            }
           } catch(e) {
-
-            resolve();
-
+            fallbackToTTS();
           }
-
         });
 
-
- 
-
+        // 지정된 횟수만큼 반복 재생 (기본 3번)
         for (let i = 0; i < times; i++) {
-
           if (currentReqRef.current !== reqId) break;
-
-          await speakOnce();
-
+          await playOnce();
           if (i < times - 1 && currentReqRef.current === reqId) {
-
             await new Promise(r => { timerRef.current = setTimeout(r, 1000); });
-
           }
-
         }
-
-       
-
+        
         if (currentReqRef.current === reqId) {
-
           setPlaying(false);
-
           setCurrentText(null);
-
         }
-
       };
 
-
- 
-
       useEffect(() => { return () => stop(); }, []);
-
       return { playSequence, stop, playing, currentText };
-
     };
-
 
  
 
@@ -1471,7 +1453,30 @@
 
       const [incorrectAnswers, setIncorrectAnswers] = useState([]);
 
+// 📱 스마트폰 하드웨어 '뒤로 가기' 버튼 튕김 방지 로직
+      useEffect(() => {
+        // 앱에 들어오면 브라우저 기록에 가짜 페이지를 하나 끼워 넣습니다.
+        window.history.pushState(null, '', window.location.href);
 
+        const handlePopState = () => {
+          // 뒤로 가기를 눌러도 앱이 꺼지지 않게 가짜 페이지를 다시 끼워 넣습니다.
+          window.history.pushState(null, '', window.location.href);
+
+          // 현재 화면에 따라 안전하게 이전 화면으로 돌려보냅니다.
+          setView(prevView => {
+            if (prevView === 'learn' || prevView === 'quiz') {
+              stopAudio(); // 말하는 중이면 멈춤
+              return 'select';
+            }
+            if (prevView === 'select') return 'home';
+            return 'home';
+          });
+        };
+
+        // 뒤로 가기 버튼을 감시하는 기능 켜기
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+      }, []);
  
 
       const { playSequence, stop: stopAudio, playing, currentText } = useAudio();
@@ -1607,134 +1612,76 @@
  
 
       const startLearn = () => {
-
         unlockAudio();
-
         setActiveDept(selDeptPop); setSelDeptPop(null); setSearchQuery(''); setView('learn');
-
       };
-
-
- 
 
       const startQuizSession = () => {
-
         unlockAudio();
-
         const d = parsedData[selDeptPop || activeDept] || [];
-
         if (d.length < 4) {
-
           alert("데이터가 부족합니다.");
-
           return;
-
         }
-
-       
-
+        
         const shuffled = [...d].sort(() => Math.random() - 0.5).slice(0, 20);
-
         const items = shuffled.map(q => {
-
           const others = d.filter(x => x.id !== q.id).sort(() => Math.random() - 0.5).slice(0, 3);
-
           return { ...q, opts: [q, ...others].sort(() => Math.random() - 0.5) };
-
         });
-
-       
-
+        
         if (selDeptPop) setActiveDept(selDeptPop);
-
         setSelDeptPop(null);
-
         setQuizItems(items); setQIdx(0); setScore(0); setQState('play'); setAns(null);
-
         setIncorrectAnswers([]);
-
         setView('quiz');
-
-       
-
+        
         setTimeout(() => { playSequence(items[0].term, 1); }, 1000);
-
       };
 
+      // ---------------------------------------------------------
+      // 📱 [업그레이드] 스마트폰 '뒤로 가기' 누를 때 팝업 우선 제어 로직
+      // ---------------------------------------------------------
+      const viewRef = useRef(view);
+      const selDeptPopRef = useRef(selDeptPop);
+      const selTermDetailRef = useRef(selTermDetail);
 
- 
+      useEffect(() => { viewRef.current = view; }, [view]);
+      useEffect(() => { selDeptPopRef.current = selDeptPop; }, [selDeptPop]);
+      useEffect(() => { selTermDetailRef.current = selTermDetail; }, [selTermDetail]);
 
-      const handleAns = (o) => {
+      useEffect(() => {
+        window.history.pushState(null, '', window.location.href);
 
-        if (ans) return;
+        const handlePopState = () => {
+          window.history.pushState(null, '', window.location.href);
 
-        setAns(o);
-
-        const currentQ = quizItems[qIdx];
-
-        const isCorrect = o.id === currentQ.id;
-
-
- 
-
-        if (isCorrect) {
-
-          setScore(s => s + 1);
-
-        } else {
-
-          setIncorrectAnswers(prev => [...prev, { ...currentQ, userAns: o }]);
-
-        }
-
-       
-
-        setTimeout(() => {
-
-          if (qIdx < quizItems.length - 1) {
-
-            const nextIdx = qIdx + 1;
-
-            setQIdx(nextIdx);
-
-            setAns(null);
-
-            setTimeout(() => { playSequence(quizItems[nextIdx].term, 1); }, 1000);
-
-          } else {
-
-            setQState('result');
-
-            setScore(latestScore => {
-
-              setHighScores(prev => {
-
-                const newScores = { ...prev };
-
-                const currentHigh = newScores[activeDept] || 0;
-
-                if (latestScore > currentHigh) {
-
-                  newScores[activeDept] = latestScore;
-
-                  try { localStorage.setItem('hd_highscores', JSON.stringify(newScores)); } catch(e){}
-
-                }
-
-                return newScores;
-
-              });
-
-              return latestScore;
-
-            });
-
+          // 1순위: 상세 설명 팝업이 열려있으면 그것만 닫기
+          if (selTermDetailRef.current) {
+            setSelTermDetail(null);
+            return;
           }
+          // 2순위: 부서 선택 팝업(시작/닫기 창)이 열려있으면 그것만 닫기
+          if (selDeptPopRef.current) {
+            setSelDeptPop(null);
+            return;
+          }
+          // 3순위: 학습/퀴즈 화면이면 부서 선택 목록으로 이동
+          if (viewRef.current === 'learn' || viewRef.current === 'quiz') {
+            stopAudio();
+            setView('select');
+            return;
+          }
+          // 4순위: 부서 선택 목록이면 홈으로 이동
+          if (viewRef.current === 'select') {
+            setView('home');
+            return;
+          }
+        };
 
-        }, 1200);
-
-      };
-
+        window.addEventListener('popstate', handlePopState);
+        return () => window.removeEventListener('popstate', handlePopState);
+      }, []);
 
  
 
