@@ -1640,6 +1640,40 @@
       };
 
       // ---------------------------------------------------------
+      // 퀴즈 정답 선택 처리 함수 (추가된 부분)
+      // ---------------------------------------------------------
+      const handleAns = (opt) => {
+        setAns(opt);
+        const isCorrect = opt.id === quizItems[qIdx].id;
+        
+        if (isCorrect) {
+          setScore(prev => prev + 1);
+        } else {
+          setIncorrectAnswers(prev => [...prev, { ...quizItems[qIdx], userAns: opt }]);
+        }
+
+        setTimeout(() => {
+          if (qIdx < quizItems.length - 1) {
+            setQIdx(prev => prev + 1);
+            setAns(null);
+            playSequence(quizItems[qIdx + 1].term, 1);
+          } else {
+            setQState('result');
+            setHighScores(prev => {
+              const newScore = score + (isCorrect ? 1 : 0);
+              const currentHigh = prev[activeDept] || 0;
+              if (newScore > currentHigh) {
+                const newScores = { ...prev, [activeDept]: newScore };
+                try { localStorage.setItem('hd_highscores', JSON.stringify(newScores)); } catch(e){}
+                return newScores;
+              }
+              return prev;
+            });
+          }
+        }, 1000);
+      };
+
+      // ---------------------------------------------------------
       // 📱 [업그레이드] 스마트폰 '뒤로 가기' 누를 때 팝업 우선 제어 로직
       // ---------------------------------------------------------
       const viewRef = useRef(view);
